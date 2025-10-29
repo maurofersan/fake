@@ -1,0 +1,277 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "scp-shoncd1-becdsettings",
+    "description": "Shortcuts onboarding canal digital, Microservicio Gestión de parametros y configuraciones",
+    "version": "1.0.0-SNAPSHOT"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Departments",
+      "description": "Departments controllers"
+    },
+    {
+      "name": "Greetings",
+      "description": "Greetings controllers"
+    },
+    {
+      "name": "Provinces",
+      "description": "Provinces controllers"
+    }
+  ],
+  "paths": {
+    "/scp-shoncd1-becdsettings/hello": {
+      "get": {
+        "tags": ["Greetings"],
+        "summary": "Says hello",
+        "description": "Endpoint that says 'Hello world!'",
+        "operationId": "sayHello",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModelGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/provinces/{provinceId}/districts": {
+      "get": {
+        "tags": ["Provinces"],
+        "summary": "Listar Distritos por Provincia",
+        "description": "Devuelve una lista de distritos pertenecientes a una provincia específica.",
+        "operationId": "findDistrictsByProvince",
+        "parameters": [
+          {
+            "name": "provinceId",
+            "in": "path",
+            "description": "ID de la provincia",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de distritos obtenida exitosamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DistrictResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "UUID inválido.",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/GluonError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/departments": {
+      "get": {
+        "tags": ["Departments"],
+        "summary": "Listar Departamentos",
+        "description": "Devuelve una lista de todos los departamentos del Perú.",
+        "operationId": "findAll",
+        "responses": {
+          "200": {
+            "description": "Lista de departamentos obtenida exitosamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DepartmentResponse"
+                  }
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Solicitud no aceptada. Verifique los parámetros enviados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GluonError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/departments/{departmentId}/provinces": {
+      "get": {
+        "tags": ["Departments"],
+        "summary": "Listar Provincias por Departamento",
+        "description": "Devuelve una lista de provincias pertenecientes a un departamento específico.",
+        "operationId": "findProvincesByDepartment",
+        "parameters": [
+          {
+            "name": "departmentId",
+            "in": "path",
+            "description": "ID del departamento para filtrar las provincias",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de provincias obtenida exitosamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProvinceResponse"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Departamento no encontrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GluonError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorModelGateway": {
+        "type": "object",
+        "description": "Darwin Gateway error",
+        "properties": {
+          "httpCode": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Http error code",
+            "example": 404
+          },
+          "httpMessage": {
+            "type": "string",
+            "description": "description of the error",
+            "example": "Not Found"
+          },
+          "moreInformation": {
+            "type": "string",
+            "description": "description of the error",
+            "example": "Not Found in /v1/applications//gateways"
+          }
+        }
+      },
+      "DistrictResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "GluonError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "DepartmentResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ProvinceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

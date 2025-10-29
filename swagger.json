@@ -1,0 +1,684 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "scp-shoncd1-becdproducts",
+    "description": "Shortcuts onboarding canal digital, Microservicio Gestión de productos",
+    "version": "1.0.0-SNAPSHOT"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8085",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Gestión de Apertura de Cuenta",
+      "description": "Operaciones relacionadas con la apertura de cuenta"
+    },
+    {
+      "name": "Gestión de Redis",
+      "description": "Operaciones relacionadas con la gestión de Redis"
+    }
+  ],
+  "paths": {
+    "/redis/create": {
+      "post": {
+        "tags": ["Gestión de Redis"],
+        "summary": "Se registran datos en Redis de forma local",
+        "description": "Registrar datos personales de onboarning del cliente",
+        "operationId": "create",
+        "parameters": [
+          {
+            "in": "header",
+            "$ref": "#/components/parameters/x-santander-client-id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedAccountEntity"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Registro Existoso",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadRecord"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro no Existoso",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseRedAccountEntity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account-openings": {
+      "post": {
+        "tags": ["Gestión de Apertura de Cuenta"],
+        "summary": "Registra una nueva apertura de cuenta",
+        "description": "Crea un registro en la apertura de cuenta y devuelve todos los datos registrados.",
+        "operationId": "createAccountOpening",
+        "parameters": [
+          {
+            "in": "header",
+            "$ref": "#/components/parameters/x-santander-client-id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountOpeningRecord"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Apertura de cuenta creada exitosamente",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadRecord"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos en la solicitud",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseAccountOpeningRecord"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/redis/{documentType}/{documentNumber}": {
+      "get": {
+        "tags": ["Gestión de Redis"],
+        "summary": "Se obtienen datos en Redis de forma local",
+        "description": "Se obtienen datos personales de onboarning del cliente",
+        "operationId": "RedAccountEntity",
+        "parameters": [
+          {
+            "name": "documentType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "documentNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "$ref": "#/components/parameters/x-santander-client-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data obtenida correctamente...",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadRecord"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Datos no encontrados",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseRedAccountEntity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account-openings/{id}": {
+      "get": {
+        "tags": ["Gestión de Apertura de Cuenta"],
+        "summary": "Obtiene una nueva apertura de cuenta",
+        "description": "Obtiene un registro en la apertura de cuenta y devuelve todos los datos registrados.",
+        "operationId": "getAccountOpeningById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "$ref": "#/components/parameters/x-santander-client-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Apertura de cuenta encontrada",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadRecord"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Apertura de cuenta no encontrada",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseAccountOpeningRecord"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account-openings/document": {
+      "get": {
+        "tags": ["Gestión de Apertura de Cuenta"],
+        "summary": "Obtiene una nueva apertura de cuenta por documento de cliente",
+        "description": "Obtiene un registro en la apertura de cuenta y devuelve todos los datos registrados por documento de cliente.",
+        "operationId": "getAccountOpeningByDocument",
+        "parameters": [
+          {
+            "name": "documentType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "documentNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "$ref": "#/components/parameters/x-santander-client-id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Apertura de cuenta encontrada",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeadRecord"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Apertura de cuenta no encontrada",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseAccountOpeningRecord"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LeadProductRecord": {
+        "type": "object",
+        "properties": {
+          "leadId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "productCode": {
+            "type": "string"
+          },
+          "subproductCode": {
+            "type": "string"
+          },
+          "evaluationType": {
+            "type": "string"
+          },
+          "strategyColorCode": {
+            "type": "string"
+          },
+          "approvedAmount": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedBy": {
+            "type": "string"
+          }
+        }
+      },
+      "LeadRecord": {
+        "type": "object",
+        "properties": {
+          "leadId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "firstLastname": {
+            "type": "string"
+          },
+          "secondLastname": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "maritalStatus": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "homeAddress": {
+            "type": "string"
+          },
+          "companyRuc": {
+            "type": "string"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "companyPhone": {
+            "type": "string"
+          },
+          "companyAddress": {
+            "type": "string"
+          },
+          "campaignStartDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "income": {
+            "type": "number"
+          },
+          "bureauScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedBy": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "leadProductRecord": {
+            "$ref": "#/components/schemas/LeadProductRecord"
+          },
+          "loanLeadRecord": {
+            "$ref": "#/components/schemas/LoanRecord"
+          }
+        }
+      },
+      "LoanRecord": {
+        "type": "object",
+        "properties": {
+          "loanId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "leadId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "approvedAmount": {
+            "type": "number"
+          },
+          "disbursedAmount": {
+            "type": "number"
+          },
+          "interestRate": {
+            "type": "number"
+          },
+          "termMonths": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "loanStatus": {
+            "type": "string"
+          },
+          "contractPath": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedBy": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RedAccountEntity": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "motherLastName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string"
+          },
+          "civilStatus": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "streetType": {
+            "type": "string"
+          },
+          "streetName": {
+            "type": "string"
+          },
+          "houseNumber": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isPeruvian": {
+            "type": "string"
+          },
+          "acceptedPrivacyPolicy": {
+            "type": "string"
+          },
+          "acceptedTermsAndConditions": {
+            "type": "string"
+          },
+          "accountTypeId": {
+            "type": "string"
+          },
+          "accountTypeName": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponseRedAccountEntity": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RedAccountEntity"
+          }
+        }
+      },
+      "AccountOpeningRecord": {
+        "type": "object",
+        "properties": {
+          "accountOpeningId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "subproductId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subproductName": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "openingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string"
+          },
+          "partnerStoreId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "partnerId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ApiResponseAccountOpeningRecord": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AccountOpeningRecord"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "x-santander-client-id": {
+        "name": "x-santander-client-id",
+        "in": "header",
+        "description": "Identify the calling application.\nIt originates from the client that calls an API, either a presentation\ncomponent or a microservice.\n",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "example": "regapi"
+      },
+      "Contact-Point": {
+        "name": "Contact-Point",
+        "in": "header",
+        "description": "Id (appKey) of the application that initiates a request and it's propagated among all applications. It originates from the presentation component and must be propagated through all communications.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "example": "SPA"
+      },
+      "User-Agent": {
+        "name": "User-Agent",
+        "in": "header",
+        "description": "Identify the technical characteristics of the device who make a network request and with which the user interacts. It originates from the client that calls an API, either a presentation component or a microservice.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "example": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36"
+      },
+      "X-B3-TraceId": {
+        "name": "X-B3-TraceId",
+        "in": "header",
+        "description": "Unique correlate identifier of a request, indicates the overall ID of the trace. It originates from the gateway and must be propagated through all communications.",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "example": "163ef67500d8b813"
+      },
+      "X-B3-SpanId": {
+        "name": "X-B3-SpanId",
+        "in": "header",
+        "description": "Identifier of the traces in a component in the same request.\nGenerated in all backend components.\n",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "example": "f5cec96a6d76ce01"
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

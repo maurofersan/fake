@@ -1,0 +1,129 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "scp-shoncd1-beioaml",
+    "description": "Shortcuts onboarding  Plataforma de Integración, Microservicio integración con servicios de listas anticorrupcion",
+    "version": "1.0.0-SNAPSHOT"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "AML",
+      "description": "Controllers AML"
+    }
+  ],
+  "paths": {
+    "/aml": {
+      "post": {
+        "tags": ["AML"],
+        "summary": "Verificar por datos personales",
+        "description": "Endpoint para verificar si una persona cuenta con antecedentes  AML ",
+        "operationId": "findBy",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/AMLRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "/": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModelGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AMLRequest": {
+        "type": "object",
+        "description": "Parámetros para consumir servicio de AML",
+        "properties": {
+          "citizenship": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "pattern": "Entity|Person"
+          },
+          "dateBirth": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\d{2}/\\d{2}/\\d{4}"
+          },
+          "dni": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\d{8}"
+          }
+        },
+        "required": ["citizenship", "dateBirth", "dni", "name"]
+      },
+      "ErrorModelGateway": {
+        "type": "object",
+        "description": "Darwin Gateway error",
+        "properties": {
+          "httpCode": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Http error code",
+            "example": 404
+          },
+          "httpMessage": {
+            "type": "string",
+            "description": "description of the error",
+            "example": "Not Found"
+          },
+          "moreInformation": {
+            "type": "string",
+            "description": "description of the error",
+            "example": "Not Found in /v1/applications//gateways"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
