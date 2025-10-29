@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { MockDataGeneratorService } from '../utils/mock-data-generator.service';
+import { AccountOpeningRecordDto } from '../dto/account-opening.dto';
 
 @Injectable()
 export class AccountOpeningService {
   constructor(private readonly mockDataGenerator: MockDataGeneratorService) {}
 
-  create(data: any): any {
+  create(data: AccountOpeningRecordDto): any {
     // Generate mock LeadRecord response
     return this.mockDataGenerator.generateFromSchema('LeadRecord', null);
   }

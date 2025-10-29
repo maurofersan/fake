@@ -1,5 +1,13 @@
-import { Controller, Post, Query, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Query,
+  Body,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { AmlService } from '../services/aml.service';
+import { AmlRequestDto } from '../dto/aml.dto';
 
 @Controller('aml')
 export class AmlController {
@@ -8,22 +16,24 @@ export class AmlController {
   @Post()
   @HttpCode(HttpStatus.OK)
   verify(
+    @Body() body?: AmlRequestDto,
     @Query('citizenship') citizenship?: string,
     @Query('name') name?: string,
     @Query('type') type?: string,
     @Query('dateBirth') dateBirth?: string,
     @Query('dni') dni?: string,
-    @Query('data') data?: any,
   ): string {
     // Mock successful AML verification response (200)
-    // Accept both individual query params and 'data' object (for flexibility)
-    const requestData = data || {
-      citizenship,
-      name,
-      type,
-      dateBirth,
-      dni,
-    };
+    // Accept both @Body (recommended for POST) and query params (as per swagger)
+    const requestData: AmlRequestDto =
+      body ||
+      ({
+        citizenship,
+        name,
+        type,
+        dateBirth,
+        dni,
+      } as AmlRequestDto);
     return this.amlService.verify(requestData);
   }
 }

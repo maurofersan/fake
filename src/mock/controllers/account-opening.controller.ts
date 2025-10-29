@@ -9,6 +9,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AccountOpeningService } from '../services/account-opening.service';
+import { AccountOpeningRecordDto } from '../dto/account-opening.dto';
 
 @Controller('api/account-openings')
 export class AccountOpeningController {
@@ -16,7 +17,7 @@ export class AccountOpeningController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() body: any) {
+  create(@Body() body: AccountOpeningRecordDto) {
     // Mock successful response (201)
     return this.accountOpeningService.create(body);
   }

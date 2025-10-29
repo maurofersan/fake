@@ -8,6 +8,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { RedisService } from '../services/redis.service';
+import { RedAccountEntityDto } from '../dto/redis.dto';
 
 @Controller('redis')
 export class RedisController {
@@ -15,7 +16,7 @@ export class RedisController {
 
   @Post('create')
   @HttpCode(HttpStatus.OK)
-  create(@Body() body: any) {
+  create(@Body() body: RedAccountEntityDto) {
     // Mock successful response (200)
     return this.redisService.create(body);
   }
