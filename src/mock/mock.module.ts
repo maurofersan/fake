@@ -8,6 +8,8 @@ import { AccountOpeningService } from './services/account-opening.service';
 import { AmlService } from './services/aml.service';
 import { SettingsService } from './services/settings.service';
 import { MockDataGeneratorService } from './utils/mock-data-generator.service';
+import { IdentyService } from './services/identy.service';
+import { IdentyController } from './controllers/identy.controller';
 
 @Module({
   controllers: [
@@ -15,6 +17,7 @@ import { MockDataGeneratorService } from './utils/mock-data-generator.service';
     AccountOpeningController,
     AmlController,
     SettingsController,
+    IdentyController,
   ],
   providers: [
     RedisService,
@@ -22,6 +25,7 @@ import { MockDataGeneratorService } from './utils/mock-data-generator.service';
     AmlService,
     SettingsService,
     MockDataGeneratorService,
+    IdentyService,
   ],
 })
 export class MockModule {}
