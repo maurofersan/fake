@@ -8,6 +8,7 @@ import { AccountOpeningService } from './services/account-opening.service';
 import { AmlService } from './services/aml.service';
 import { SettingsService } from './services/settings.service';
 import { MockDataGeneratorService } from './utils/mock-data-generator.service';
+import { FakeStorageService } from './utils/fake-storage.service';
 
 @Module({
   controllers: [
@@ -22,6 +23,7 @@ import { MockDataGeneratorService } from './utils/mock-data-generator.service';
     AmlService,
     SettingsService,
     MockDataGeneratorService,
+    FakeStorageService,
   ],
 })
 export class MockModule {}
