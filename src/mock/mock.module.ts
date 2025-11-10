@@ -10,6 +10,7 @@ import { SettingsService } from './services/settings.service';
 import { MockDataGeneratorService } from './utils/mock-data-generator.service';
 import { IdentyService } from './services/identy.service';
 import { IdentyController } from './controllers/identy.controller';
+import { FakeStorageService } from './utils/fake-storage.service';
 
 @Module({
   controllers: [
@@ -26,6 +27,7 @@ import { IdentyController } from './controllers/identy.controller';
     SettingsService,
     MockDataGeneratorService,
     IdentyService,
+    FakeStorageService,
   ],
 })
 export class MockModule {}
