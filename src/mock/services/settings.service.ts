@@ -5,8 +5,8 @@ import {
   DepartmentResponseDto,
   ProvinceResponseDto,
   DistrictResponseDto,
-  TypeAccountRecordDto,
   DescribeCatalogRecordDto,
+  ApiResponseTypeAccountRecordDto,
 } from '../dto/settings.dto';
 
 @Injectable()
@@ -83,7 +83,7 @@ export class SettingsService {
     return districts;
   }
 
-  listTypeAccounts(): TypeAccountRecordDto[] {
+  listTypeAccounts(): ApiResponseTypeAccountRecordDto {
     // Try to get from storage first
     const storageKey = 'settings:catalog:typeAccounts';
     const stored = this.fakeStorage.getItem(storageKey);
@@ -92,16 +92,31 @@ export class SettingsService {
       return stored;
     }
 
-    // Generate array of type accounts (typically 3-5 items for mock)
-    const typeAccounts = this.mockDataGenerator.generateArray(
-      'TypeAccountRecord',
-      5,
-    );
+    // Fixed response with exactly two accounts as specified
+    const response: ApiResponseTypeAccountRecordDto = {
+      success: true,
+      status: 200,
+      message: 'Lista obtenida correctamente',
+      data: [
+        {
+          productId: '6b19fa91-b703-45e4-96e8-b18c4977dd25',
+          productName: 'Apertura de Cuenta',
+          subProductId: '849676f6-c5f2-414c-9e74-1ac799ab61db',
+          subProductName: 'Cuenta Imparable',
+        },
+        {
+          productId: '6b19fa91-b703-45e4-96e8-b18c4977dd25',
+          productName: 'Apertura de Cuenta',
+          subProductId: '98695cb1-15fa-4ee2-b66e-276d143d5385',
+          subProductName: 'Cuenta Libre',
+        },
+      ],
+    };
 
     // Persist for future requests
-    this.fakeStorage.setItem(storageKey, typeAccounts);
+    this.fakeStorage.setItem(storageKey, response);
 
-    return typeAccounts;
+    return response;
   }
 
   findDescribeCatalogByType(type: string): DescribeCatalogRecordDto[] {

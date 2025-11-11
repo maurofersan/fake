@@ -4,8 +4,8 @@ import {
   DepartmentResponseDto,
   ProvinceResponseDto,
   DistrictResponseDto,
-  TypeAccountRecordDto,
   DescribeCatalogRecordDto,
+  ApiResponseTypeAccountRecordDto,
 } from '../dto/settings.dto';
 
 @Controller()
@@ -42,7 +42,7 @@ export class SettingsController {
 
   @Get('catalog/typeAccounts')
   @HttpCode(HttpStatus.OK)
-  listTypeAccounts(): TypeAccountRecordDto[] {
+  listTypeAccounts(): ApiResponseTypeAccountRecordDto {
     return this.settingsService.listTypeAccounts();
   }
 
