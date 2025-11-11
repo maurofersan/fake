@@ -32,6 +32,12 @@ export class MockDataGeneratorService {
         return this.generateErrorModelGateway();
       case 'GluonError':
         return this.generateGluonError();
+      case 'TypeAccountRecord':
+        return this.generateTypeAccountRecord();
+      case 'DescribeCatalogRecord':
+        return this.generateDescribeCatalogRecord();
+      case 'ApiResponseListDescribeCatalogRecord':
+        return this.generateApiResponseListDescribeCatalogRecord();
       default:
         return this.generateFromProperties(schema?.properties || {});
     }
@@ -302,6 +308,60 @@ export class MockDataGeneratorService {
       description: faker.lorem.sentence(),
       level: faker.helpers.arrayElement(['ERROR', 'WARNING', 'INFO']),
       message: faker.lorem.sentence(),
+    };
+  }
+
+  private generateTypeAccountRecord(): any {
+    const accountTypes = [
+      { product: 'Cuenta Corriente', subProduct: 'Corriente Regular' },
+      { product: 'Cuenta Corriente', subProduct: 'Corriente Premium' },
+      { product: 'Cuenta de Ahorros', subProduct: 'Ahorro Regular' },
+      { product: 'Cuenta de Ahorros', subProduct: 'Ahorro Plus' },
+      { product: 'Cuenta de Ahorros', subProduct: 'Ahorro VIP' },
+    ];
+    const selected = faker.helpers.arrayElement(accountTypes);
+    return {
+      productId: faker.string.uuid(),
+      productName: selected.product,
+      subProductId: faker.string.uuid(),
+      subProductName: selected.subProduct,
+    };
+  }
+
+  private generateDescribeCatalogRecord(): any {
+    const catalogTypes: Record<string, string[]> = {
+      document_type: ['DNI', 'CE', 'PASAPORTE', 'RUC'],
+      marital_status: [
+        'Soltero',
+        'Casado',
+        'Divorciado',
+        'Viudo',
+        'Conviviente',
+      ],
+      gender: ['M', 'F'],
+      account_type: ['Corriente', 'Ahorros'],
+      currency: ['PEN', 'USD', 'EUR'],
+    };
+
+    // Generate a random catalog entry
+    const codes = Object.keys(catalogTypes);
+    const randomCode = faker.helpers.arrayElement(codes);
+    const values = catalogTypes[randomCode];
+    const randomValue = faker.helpers.arrayElement(values);
+
+    return {
+      describeCatalogId: faker.string.alphanumeric(10).toUpperCase(),
+      describeCatalogCode: randomValue,
+      describeCatalogDescription: `${randomCode}: ${randomValue}`,
+    };
+  }
+
+  private generateApiResponseListDescribeCatalogRecord(): any {
+    return {
+      success: false,
+      status: 500,
+      message: 'Error interno del servidor',
+      data: [],
     };
   }
 
