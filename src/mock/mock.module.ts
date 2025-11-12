@@ -8,6 +8,8 @@ import { AccountOpeningService } from './services/account-opening.service';
 import { AmlService } from './services/aml.service';
 import { SettingsService } from './services/settings.service';
 import { MockDataGeneratorService } from './utils/mock-data-generator.service';
+import { IdentyService } from './services/identy.service';
+import { IdentyController } from './controllers/identy.controller';
 import { FakeStorageService } from './utils/fake-storage.service';
 
 @Module({
@@ -16,6 +18,7 @@ import { FakeStorageService } from './utils/fake-storage.service';
     AccountOpeningController,
     AmlController,
     SettingsController,
+    IdentyController,
   ],
   providers: [
     RedisService,
@@ -23,6 +26,7 @@ import { FakeStorageService } from './utils/fake-storage.service';
     AmlService,
     SettingsService,
     MockDataGeneratorService,
+    IdentyService,
     FakeStorageService,
   ],
 })

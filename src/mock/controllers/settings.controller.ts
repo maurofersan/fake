@@ -1,5 +1,12 @@
 import { Controller, Get, Param, HttpCode, HttpStatus } from '@nestjs/common';
 import { SettingsService } from '../services/settings.service';
+import {
+  DepartmentResponseDto,
+  ProvinceResponseDto,
+  DistrictResponseDto,
+  ApiResponseTypeAccountRecordDto,
+  ApiResponseListDescribeCatalogRecordDto,
+} from '../dto/settings.dto';
 
 @Controller()
 export class SettingsController {
@@ -11,21 +18,37 @@ export class SettingsController {
     return this.settingsService.sayHello();
   }
 
+  @Get('provinces/:provinceId/districts')
+  @HttpCode(HttpStatus.OK)
+  findDistrictsByProvince(@Param('provinceId') provinceId: string) {
+    return this.settingsService.findDistrictsByProvince(provinceId);
+  }
+
+  @Get('departments/:departmentId/provinces')
+  @HttpCode(HttpStatus.OK)
+  findProvincesByDepartment(
+    @Param('departmentId') departmentId: string,
+  ): ProvinceResponseDto[] {
+    return this.settingsService.findProvincesByDepartment(departmentId);
+  }
+
   @Get('departments')
   @HttpCode(HttpStatus.OK)
   findAllDepartments() {
     return this.settingsService.findAllDepartments();
   }
 
-  @Get('departments/:departmentId/provinces')
+  @Get('catalog/typeAccounts')
   @HttpCode(HttpStatus.OK)
-  findProvincesByDepartment(@Param('departmentId') departmentId: string) {
-    return this.settingsService.findProvincesByDepartment(departmentId);
+  listTypeAccounts(): ApiResponseTypeAccountRecordDto {
+    return this.settingsService.listTypeAccounts();
   }
 
-  @Get('provinces/:provinceId/districts')
+  @Get('catalog/describe-catalog/:type')
   @HttpCode(HttpStatus.OK)
-  findDistrictsByProvince(@Param('provinceId') provinceId: string) {
-    return this.settingsService.findDistrictsByProvince(provinceId);
+  findDescribeCatalogByType(
+    @Param('type') type: string,
+  ): ApiResponseListDescribeCatalogRecordDto {
+    return this.settingsService.findDescribeCatalogByType(type);
   }
 }
