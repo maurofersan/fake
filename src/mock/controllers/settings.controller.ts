@@ -4,8 +4,8 @@ import {
   DepartmentResponseDto,
   ProvinceResponseDto,
   DistrictResponseDto,
-  DescribeCatalogRecordDto,
   ApiResponseTypeAccountRecordDto,
+  ApiResponseListDescribeCatalogRecordDto,
 } from '../dto/settings.dto';
 
 @Controller()
@@ -18,10 +18,10 @@ export class SettingsController {
     return this.settingsService.sayHello();
   }
 
-  @Get('departments')
+  @Get('provinces/:provinceId/districts')
   @HttpCode(HttpStatus.OK)
-  findAllDepartments(): DepartmentResponseDto[] {
-    return this.settingsService.findAllDepartments();
+  findDistrictsByProvince(@Param('provinceId') provinceId: string) {
+    return this.settingsService.findDistrictsByProvince(provinceId);
   }
 
   @Get('departments/:departmentId/provinces')
@@ -32,12 +32,10 @@ export class SettingsController {
     return this.settingsService.findProvincesByDepartment(departmentId);
   }
 
-  @Get('provinces/:provinceId/districts')
+  @Get('departments')
   @HttpCode(HttpStatus.OK)
-  findDistrictsByProvince(
-    @Param('provinceId') provinceId: string,
-  ): DistrictResponseDto[] {
-    return this.settingsService.findDistrictsByProvince(provinceId);
+  findAllDepartments() {
+    return this.settingsService.findAllDepartments();
   }
 
   @Get('catalog/typeAccounts')
@@ -50,7 +48,7 @@ export class SettingsController {
   @HttpCode(HttpStatus.OK)
   findDescribeCatalogByType(
     @Param('type') type: string,
-  ): DescribeCatalogRecordDto[] {
+  ): ApiResponseListDescribeCatalogRecordDto {
     return this.settingsService.findDescribeCatalogByType(type);
   }
 }

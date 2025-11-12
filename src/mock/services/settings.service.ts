@@ -7,6 +7,7 @@ import {
   DistrictResponseDto,
   DescribeCatalogRecordDto,
   ApiResponseTypeAccountRecordDto,
+  ApiResponseListDescribeCatalogRecordDto,
 } from '../dto/settings.dto';
 
 @Injectable()
@@ -119,7 +120,9 @@ export class SettingsService {
     return response;
   }
 
-  findDescribeCatalogByType(type: string): DescribeCatalogRecordDto[] {
+  findDescribeCatalogByType(
+    type: string,
+  ): ApiResponseListDescribeCatalogRecordDto {
     // Try to get from storage first
     const storageKey = `settings:catalog:describe:${type}`;
     const stored = this.fakeStorage.getItem(storageKey);
@@ -128,17 +131,88 @@ export class SettingsService {
       return stored;
     }
 
-    // Generate array of catalog records (typically 3-8 items depending on type)
-    const count =
-      type === 'document_type' ? 4 : type === 'marital_status' ? 5 : 3;
-    const catalogRecords = this.mockDataGenerator.generateArray(
-      'DescribeCatalogRecord',
-      count,
-    );
+    // Get catalog data based on type
+    const catalogData = this.getCatalogDataByType(type);
+
+    const response: ApiResponseListDescribeCatalogRecordDto = {
+      success: true,
+      status: 200,
+      message: 'Catálogo obtenido correctamente',
+      data: catalogData,
+    };
 
     // Persist for future requests
-    this.fakeStorage.setItem(storageKey, catalogRecords);
+    this.fakeStorage.setItem(storageKey, response);
 
-    return catalogRecords;
+    return response;
+  }
+
+  /**
+   * Get catalog data based on type
+   * This method can be extended with more catalog types as needed
+   */
+  private getCatalogDataByType(type: string): DescribeCatalogRecordDto[] {
+    const catalogMap: Record<string, DescribeCatalogRecordDto[]> = {
+      marital_status: [
+        {
+          describeCatalogId: '75b58ddf-78e0-44d1-b0f2-e574cef0a810',
+          describeCatalogCode: 'Soltero(a)',
+          describeCatalogDescription: 'Descripción de Soltero(a) (Editable)',
+        },
+        {
+          describeCatalogId: '266fc698-a980-4f8a-8e1b-5a0688a30893',
+          describeCatalogCode: 'Casado(a)',
+          describeCatalogDescription: 'Descripción de Casado(a) (Editable)',
+        },
+        {
+          describeCatalogId: '3c9fb603-4cf1-4f4e-816a-98d54e93bbe9',
+          describeCatalogCode: 'Conviviente',
+          describeCatalogDescription: 'Descripción de Conviviente (Editable)',
+        },
+        {
+          describeCatalogId: 'e20973f4-8a23-4d36-bae1-b8f5d43dd7df',
+          describeCatalogCode: 'Viudo(a)',
+          describeCatalogDescription: 'Descripción de Viudo(a) (Editable)',
+        },
+        {
+          describeCatalogId: '30ade2a9-f291-4862-a68e-2146bec744cb',
+          describeCatalogCode: 'Divorciado(a)',
+          describeCatalogDescription: 'Descripción de Divorciado(a) (Editable)',
+        },
+        {
+          describeCatalogId: 'ff4d3971-8613-454d-bbf1-07523bed2c61',
+          describeCatalogCode: 'No Especificado',
+          describeCatalogDescription:
+            'Descripción de No Especificado (Editable)',
+        },
+      ],
+      currency_type: [
+        {
+          describeCatalogId: 'cc2fee53-4e51-488a-ad92-9c9c3168ebd0',
+          describeCatalogCode: 'Soles (S/.)',
+          describeCatalogDescription: 'Descripción de Soles (S/.) (Editable)',
+        },
+        {
+          describeCatalogId: '010a63b1-8c19-45c6-9207-6b8d4576ae53',
+          describeCatalogCode: 'Dólares (US$)',
+          describeCatalogDescription: 'Descripción de Dólares (US$) (Editable)',
+        },
+        {
+          describeCatalogId: 'a7c90db3-0372-485d-b8d5-adedafdb99b4',
+          describeCatalogCode: 'Euros (EUR)',
+          describeCatalogDescription: 'Descripción de Euros (EUR) (Editable)',
+        },
+      ],
+    };
+
+    // Return specific catalog data if exists, otherwise generate mock data
+    if (catalogMap[type]) {
+      return catalogMap[type];
+    }
+
+    // Fallback: generate mock data for unknown types
+    const count =
+      type === 'document_type' ? 4 : type === 'marital_status' ? 5 : 3;
+    return this.mockDataGenerator.generateArray('DescribeCatalogRecord', count);
   }
 }
