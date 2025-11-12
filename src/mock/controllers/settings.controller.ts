@@ -11,10 +11,10 @@ export class SettingsController {
     return this.settingsService.sayHello();
   }
 
-  @Get('departments')
+  @Get('provinces/:provinceId/districts')
   @HttpCode(HttpStatus.OK)
-  findAllDepartments() {
-    return this.settingsService.findAllDepartments();
+  findDistrictsByProvince(@Param('provinceId') provinceId: string) {
+    return this.settingsService.findDistrictsByProvince(provinceId);
   }
 
   @Get('departments/:departmentId/provinces')
@@ -23,9 +23,9 @@ export class SettingsController {
     return this.settingsService.findProvincesByDepartment(departmentId);
   }
 
-  @Get('provinces/:provinceId/districts')
+  @Get('departments')
   @HttpCode(HttpStatus.OK)
-  findDistrictsByProvince(@Param('provinceId') provinceId: string) {
-    return this.settingsService.findDistrictsByProvince(provinceId);
+  findAllDepartments() {
+    return this.settingsService.findAllDepartments();
   }
 }
