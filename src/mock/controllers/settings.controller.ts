@@ -1,5 +1,12 @@
 import { Controller, Get, Param, HttpCode, HttpStatus } from '@nestjs/common';
 import { SettingsService } from '../services/settings.service';
+import {
+  DepartmentResponseDto,
+  ProvinceResponseDto,
+  DistrictResponseDto,
+  ApiResponseTypeAccountRecordDto,
+  ApiResponseListDescribeCatalogRecordDto,
+} from '../dto/settings.dto';
 
 @Controller()
 export class SettingsController {
@@ -19,7 +26,9 @@ export class SettingsController {
 
   @Get('departments/:departmentId/provinces')
   @HttpCode(HttpStatus.OK)
-  findProvincesByDepartment(@Param('departmentId') departmentId: string) {
+  findProvincesByDepartment(
+    @Param('departmentId') departmentId: string,
+  ): ProvinceResponseDto[] {
     return this.settingsService.findProvincesByDepartment(departmentId);
   }
 
@@ -27,5 +36,19 @@ export class SettingsController {
   @HttpCode(HttpStatus.OK)
   findAllDepartments() {
     return this.settingsService.findAllDepartments();
+  }
+
+  @Get('catalog/typeAccounts')
+  @HttpCode(HttpStatus.OK)
+  listTypeAccounts(): ApiResponseTypeAccountRecordDto {
+    return this.settingsService.listTypeAccounts();
+  }
+
+  @Get('catalog/describe-catalog/:type')
+  @HttpCode(HttpStatus.OK)
+  findDescribeCatalogByType(
+    @Param('type') type: string,
+  ): ApiResponseListDescribeCatalogRecordDto {
+    return this.settingsService.findDescribeCatalogByType(type);
   }
 }
