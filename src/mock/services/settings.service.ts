@@ -216,6 +216,24 @@ export class SettingsService {
           describeCatalogDescription: 'Descripción de Euros (EUR) (Editable)',
         },
       ],
+      gender: [
+        {
+          describeCatalogId: '8ad30a61-2a3b-4c99-aaa4-ac1b507b2c8e',
+          describeCatalogCode: 'Masculino',
+          describeCatalogDescription: 'Descripción de Masculino (Editable)',
+        },
+        {
+          describeCatalogId: '277bd012-197c-4d83-af0f-f250f37c1668',
+          describeCatalogCode: 'Femenino',
+          describeCatalogDescription: 'Descripción de Femenino (Editable)',
+        },
+        {
+          describeCatalogId: 'b8b00c0e-b6cf-45f4-8f7e-3a6720aa7aa1',
+          describeCatalogCode: 'No Especificado',
+          describeCatalogDescription:
+            'Descripción de No Especificado (Editable)',
+        },
+      ],
     };
 
     // Return specific catalog data if exists, otherwise generate mock data
