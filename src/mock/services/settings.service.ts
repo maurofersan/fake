@@ -234,6 +234,38 @@ export class SettingsService {
             'Descripción de No Especificado (Editable)',
         },
       ],
+      road_type: [
+        {
+          describeCatalogId: '1f2c47d3-1234-4a12-9f71-987654321001',
+          describeCatalogCode: 'Avenida',
+          describeCatalogDescription: 'Descripción de Avenida (Editable)',
+        },
+        {
+          describeCatalogId: '2b3d58e4-2234-4c44-8f02-987654321002',
+          describeCatalogCode: 'Calle',
+          describeCatalogDescription: 'Descripción de Calle (Editable)',
+        },
+        {
+          describeCatalogId: '3c4e69f5-3234-4f55-9c13-987654321003',
+          describeCatalogCode: 'Jirón',
+          describeCatalogDescription: 'Descripción de Jirón (Editable)',
+        },
+        {
+          describeCatalogId: '4d5f70g6-4234-4a66-8d24-987654321004',
+          describeCatalogCode: 'Pasaje',
+          describeCatalogDescription: 'Descripción de Pasaje (Editable)',
+        },
+        {
+          describeCatalogId: '5e6h81i7-5234-4b77-9e35-987654321005',
+          describeCatalogCode: 'Carretera',
+          describeCatalogDescription: 'Descripción de Carretera (Editable)',
+        },
+        {
+          describeCatalogId: '6f7i92j8-6234-4c88-af46-987654321006',
+          describeCatalogCode: 'Autopista',
+          describeCatalogDescription: 'Descripción de Autopista (Editable)',
+        },
+      ],
     };
 
     // Return specific catalog data if exists, otherwise generate mock data
