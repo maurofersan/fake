@@ -19,7 +19,7 @@ export class SettingsController {
     return this.settingsService.sayHello();
   }
 
-  @Get('provinces/:provinceId/districts')
+  @Get('departments')
   @HttpCode(HttpStatus.OK)
   findAllDepartments(): ApiResponse<DepartmentResponseDto[]> {
     return this.settingsService.findAllDepartments();
@@ -33,7 +33,7 @@ export class SettingsController {
     return this.settingsService.findProvincesByDepartment(departmentId);
   }
 
-  @Get('departments')
+  @Get('provinces/:provinceId/districts')
   @HttpCode(HttpStatus.OK)
   findDistrictsByProvince(
     @Param('provinceId') provinceId: string,
