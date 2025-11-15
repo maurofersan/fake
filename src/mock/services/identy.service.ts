@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
-
+import { ApiResponseBuilderService } from '../utils/api-response-builder.service';
 import { SDKTypeDto } from '../dto/identy.dto';
+import { ApiResponse } from '../dto/common.dto';
 
 @Injectable()
 export class IdentyService {
-  generatePubKey(sdkType: SDKTypeDto): string {
+  constructor(private readonly apiResponseBuilder: ApiResponseBuilderService) {}
+
+  generatePubKey(sdkType: SDKTypeDto): ApiResponse<string> {
     console.log('sdkType::', sdkType);
-    return process.env.OCR_PUB_KEY ?? 'x';
+    const pubKey = process.env.OCR_PUB_KEY ?? 'x';
+    return this.apiResponseBuilder.success(
+      pubKey,
+      'Clave pública generada exitosamente',
+    );
   }
 }

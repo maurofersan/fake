@@ -1,104 +1,116 @@
 import { Injectable } from '@nestjs/common';
 import { MockDataGeneratorService } from '../utils/mock-data-generator.service';
 import { FakeStorageService } from '../utils/fake-storage.service';
+import { ApiResponseBuilderService } from '../utils/api-response-builder.service';
 import {
   DepartmentResponseDto,
   ProvinceResponseDto,
   DistrictResponseDto,
   DescribeCatalogRecordDto,
-  ApiResponseTypeAccountRecordDto,
-  ApiResponseListDescribeCatalogRecordDto,
+  TypeAccountRecordDto,
 } from '../dto/settings.dto';
+import { ApiResponse } from '../dto/common.dto';
 
 @Injectable()
 export class SettingsService {
   constructor(
     private readonly mockDataGenerator: MockDataGeneratorService,
     private readonly fakeStorage: FakeStorageService,
+    private readonly apiResponseBuilder: ApiResponseBuilderService,
   ) {}
 
-  sayHello(): string {
-    return 'Hello world!';
+  sayHello(): ApiResponse<string> {
+    return this.apiResponseBuilder.success('Hello world!', 'Saludo exitoso');
   }
 
-  findAllDepartments(): DepartmentResponseDto[] {
+  findAllDepartments(): ApiResponse<DepartmentResponseDto[]> {
     // Try to get from storage first
     const storageKey = 'settings:departments';
     const stored = this.fakeStorage.getItem(storageKey);
 
+    let departments: DepartmentResponseDto[];
+
     if (stored) {
-      return stored;
+      departments = stored;
+    } else {
+      // Generate array of departments (typically 5-10 items for mock)
+      departments = this.mockDataGenerator.generateArray(
+        'DepartmentResponse',
+        8,
+      );
+
+      // Persist for future requests
+      this.fakeStorage.setItem(storageKey, departments);
     }
 
-    // Generate array of departments (typically 5-10 items for mock)
-    const departments = this.mockDataGenerator.generateArray(
-      'DepartmentResponse',
-      8,
+    return this.apiResponseBuilder.success(
+      departments,
+      'Departamentos obtenidos correctamente',
     );
-
-    // Persist for future requests
-    this.fakeStorage.setItem(storageKey, departments);
-
-    return departments;
   }
 
-  findProvincesByDepartment(departmentId: string): ProvinceResponseDto[] {
+  findProvincesByDepartment(
+    departmentId: string,
+  ): ApiResponse<ProvinceResponseDto[]> {
     // Try to get from storage first
     const storageKey = `settings:provinces:${departmentId}`;
     const stored = this.fakeStorage.getItem(storageKey);
 
+    let provinces: ProvinceResponseDto[];
+
     if (stored) {
-      return stored;
+      provinces = stored;
+    } else {
+      // Generate array of provinces for a department
+      provinces = this.mockDataGenerator.generateArray('ProvinceResponse', 5);
+
+      // Persist for future requests
+      this.fakeStorage.setItem(storageKey, provinces);
     }
 
-    // Generate array of provinces for a department
-    const provinces = this.mockDataGenerator.generateArray(
-      'ProvinceResponse',
-      5,
+    return this.apiResponseBuilder.success(
+      provinces,
+      'Provincias obtenidas correctamente',
     );
-
-    // Persist for future requests
-    this.fakeStorage.setItem(storageKey, provinces);
-
-    return provinces;
   }
 
-  findDistrictsByProvince(provinceId: string): DistrictResponseDto[] {
+  findDistrictsByProvince(
+    provinceId: string,
+  ): ApiResponse<DistrictResponseDto[]> {
     // Try to get from storage first
     const storageKey = `settings:districts:${provinceId}`;
     const stored = this.fakeStorage.getItem(storageKey);
 
+    let districts: DistrictResponseDto[];
+
     if (stored) {
-      return stored;
+      districts = stored;
+    } else {
+      // Generate array of districts for a province
+      districts = this.mockDataGenerator.generateArray('DistrictResponse', 8);
+
+      // Persist for future requests
+      this.fakeStorage.setItem(storageKey, districts);
     }
 
-    // Generate array of districts for a province
-    const districts = this.mockDataGenerator.generateArray(
-      'DistrictResponse',
-      8,
+    return this.apiResponseBuilder.success(
+      districts,
+      'Distritos obtenidos correctamente',
     );
-
-    // Persist for future requests
-    this.fakeStorage.setItem(storageKey, districts);
-
-    return districts;
   }
 
-  listTypeAccounts(): ApiResponseTypeAccountRecordDto {
+  listTypeAccounts(): ApiResponse<TypeAccountRecordDto[]> {
     // Try to get from storage first
     const storageKey = 'settings:catalog:typeAccounts';
     const stored = this.fakeStorage.getItem(storageKey);
 
-    if (stored) {
-      return stored;
-    }
+    let typeAccounts: TypeAccountRecordDto[];
 
-    // Fixed response with exactly two accounts as specified
-    const response: ApiResponseTypeAccountRecordDto = {
-      success: true,
-      status: 200,
-      message: 'Lista obtenida correctamente',
-      data: [
+    if (stored) {
+      typeAccounts = stored;
+    } else {
+      // Fixed response with exactly two accounts as specified
+      typeAccounts = [
         {
           productId: '6b19fa91-b703-45e4-96e8-b18c4977dd25',
           productName: 'Apertura de Cuenta',
@@ -111,40 +123,41 @@ export class SettingsService {
           subProductId: '98695cb1-15fa-4ee2-b66e-276d143d5385',
           subProductName: 'Cuenta Libre',
         },
-      ],
-    };
+      ];
 
-    // Persist for future requests
-    this.fakeStorage.setItem(storageKey, response);
+      // Persist for future requests
+      this.fakeStorage.setItem(storageKey, typeAccounts);
+    }
 
-    return response;
+    return this.apiResponseBuilder.success(
+      typeAccounts,
+      'Lista obtenida correctamente',
+    );
   }
 
   findDescribeCatalogByType(
     type: string,
-  ): ApiResponseListDescribeCatalogRecordDto {
+  ): ApiResponse<DescribeCatalogRecordDto[]> {
     // Try to get from storage first
     const storageKey = `settings:catalog:describe:${type}`;
     const stored = this.fakeStorage.getItem(storageKey);
 
+    let catalogData: DescribeCatalogRecordDto[];
+
     if (stored) {
-      return stored;
+      catalogData = stored;
+    } else {
+      // Get catalog data based on type
+      catalogData = this.getCatalogDataByType(type);
+
+      // Persist for future requests
+      this.fakeStorage.setItem(storageKey, catalogData);
     }
 
-    // Get catalog data based on type
-    const catalogData = this.getCatalogDataByType(type);
-
-    const response: ApiResponseListDescribeCatalogRecordDto = {
-      success: true,
-      status: 200,
-      message: 'Catálogo obtenido correctamente',
-      data: catalogData,
-    };
-
-    // Persist for future requests
-    this.fakeStorage.setItem(storageKey, response);
-
-    return response;
+    return this.apiResponseBuilder.success(
+      catalogData,
+      'Catálogo obtenido correctamente',
+    );
   }
 
   /**

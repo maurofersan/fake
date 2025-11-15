@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { RedisService } from '../services/redis.service';
 import { RedAccountEntityDto } from '../dto/redis.dto';
+import { ApiResponse } from '../dto/common.dto';
 
 @Controller('redis')
 export class RedisController {
@@ -16,8 +17,7 @@ export class RedisController {
 
   @Post('create')
   @HttpCode(HttpStatus.OK)
-  create(@Body() body: RedAccountEntityDto) {
-    // Mock successful response (200)
+  create(@Body() body: RedAccountEntityDto): ApiResponse<any> {
     return this.redisService.create(body);
   }
 
@@ -26,8 +26,7 @@ export class RedisController {
   findByDocument(
     @Param('documentType') documentType: string,
     @Param('documentNumber') documentNumber: string,
-  ) {
-    // Mock successful response (200)
+  ): ApiResponse<any> {
     return this.redisService.findByDocument(documentType, documentNumber);
   }
 }

@@ -25,24 +25,10 @@ export class TypeAccountRecordDto {
   subProductName: string;
 }
 
-export class ApiResponseTypeAccountRecordDto {
-  success: boolean;
-  status: number;
-  message: string;
-  data: TypeAccountRecordDto[];
-}
-
 export class DescribeCatalogRecordDto {
   describeCatalogId: string;
   describeCatalogCode: string;
   describeCatalogDescription: string;
-}
-
-export class ApiResponseListDescribeCatalogRecordDto {
-  success: boolean;
-  status: number;
-  message: string;
-  data: DescribeCatalogRecordDto[];
 }
 
 export class GluonErrorDto {
