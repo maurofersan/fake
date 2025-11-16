@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { AccountOpeningService } from '../services/account-opening.service';
 import { AccountOpeningRecordDto } from '../dto/account-opening.dto';
+import { ApiResponse } from '../dto/common.dto';
 
 @Controller('api/account-openings')
 export class AccountOpeningController {
@@ -17,8 +18,7 @@ export class AccountOpeningController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() body: AccountOpeningRecordDto) {
-    // Mock successful response (201)
+  create(@Body() body: AccountOpeningRecordDto): ApiResponse<any> {
     return this.accountOpeningService.create(body);
   }
 
@@ -27,8 +27,7 @@ export class AccountOpeningController {
   findByDocument(
     @Query('documentType') documentType: string,
     @Query('documentNumber') documentNumber: string,
-  ) {
-    // Mock successful response (200)
+  ): ApiResponse<any> {
     return this.accountOpeningService.findByDocument(
       documentType,
       documentNumber,
@@ -37,8 +36,7 @@ export class AccountOpeningController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  findById(@Param('id') id: string) {
-    // Mock successful response (200)
+  findById(@Param('id') id: string): ApiResponse<any> {
     return this.accountOpeningService.findById(id);
   }
 }

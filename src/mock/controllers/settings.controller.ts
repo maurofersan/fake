@@ -4,9 +4,10 @@ import {
   DepartmentResponseDto,
   ProvinceResponseDto,
   DistrictResponseDto,
-  ApiResponseTypeAccountRecordDto,
-  ApiResponseListDescribeCatalogRecordDto,
+  TypeAccountRecordDto,
+  DescribeCatalogRecordDto,
 } from '../dto/settings.dto';
+import { ApiResponse } from '../dto/common.dto';
 
 @Controller()
 export class SettingsController {
@@ -14,33 +15,35 @@ export class SettingsController {
 
   @Get('scp-shoncd1-becdsettings/hello')
   @HttpCode(HttpStatus.OK)
-  sayHello(): string {
+  sayHello(): ApiResponse<string> {
     return this.settingsService.sayHello();
   }
 
-  @Get('provinces/:provinceId/districts')
+  @Get('departments')
   @HttpCode(HttpStatus.OK)
-  findDistrictsByProvince(@Param('provinceId') provinceId: string) {
-    return this.settingsService.findDistrictsByProvince(provinceId);
+  findAllDepartments(): ApiResponse<DepartmentResponseDto[]> {
+    return this.settingsService.findAllDepartments();
   }
 
   @Get('departments/:departmentId/provinces')
   @HttpCode(HttpStatus.OK)
   findProvincesByDepartment(
     @Param('departmentId') departmentId: string,
-  ): ProvinceResponseDto[] {
+  ): ApiResponse<ProvinceResponseDto[]> {
     return this.settingsService.findProvincesByDepartment(departmentId);
   }
 
-  @Get('departments')
+  @Get('provinces/:provinceId/districts')
   @HttpCode(HttpStatus.OK)
-  findAllDepartments() {
-    return this.settingsService.findAllDepartments();
+  findDistrictsByProvince(
+    @Param('provinceId') provinceId: string,
+  ): ApiResponse<DistrictResponseDto[]> {
+    return this.settingsService.findDistrictsByProvince(provinceId);
   }
 
   @Get('catalog/typeAccounts')
   @HttpCode(HttpStatus.OK)
-  listTypeAccounts(): ApiResponseTypeAccountRecordDto {
+  listTypeAccounts(): ApiResponse<TypeAccountRecordDto[]> {
     return this.settingsService.listTypeAccounts();
   }
 
@@ -48,7 +51,7 @@ export class SettingsController {
   @HttpCode(HttpStatus.OK)
   findDescribeCatalogByType(
     @Param('type') type: string,
-  ): ApiResponseListDescribeCatalogRecordDto {
+  ): ApiResponse<DescribeCatalogRecordDto[]> {
     return this.settingsService.findDescribeCatalogByType(type);
   }
 }

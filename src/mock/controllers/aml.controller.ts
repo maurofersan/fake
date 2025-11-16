@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { AmlService } from '../services/aml.service';
 import { AmlRequestDto } from '../dto/aml.dto';
+import { ApiResponse } from '../dto/common.dto';
 
 @Controller('aml')
 export class AmlController {
@@ -22,8 +23,7 @@ export class AmlController {
     @Query('type') type?: string,
     @Query('dateBirth') dateBirth?: string,
     @Query('dni') dni?: string,
-  ): string {
-    // Mock successful AML verification response (200)
+  ): ApiResponse<string> {
     // Accept both @Body (recommended for POST) and query params (as per swagger)
     const requestData: AmlRequestDto =
       body ||
