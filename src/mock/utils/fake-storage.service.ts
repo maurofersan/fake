@@ -20,4 +20,3 @@ export class FakeStorageService {
     this.data = {};
   }
 }
-

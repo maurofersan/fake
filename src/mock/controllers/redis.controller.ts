@@ -8,7 +8,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { RedisService } from '../services/redis.service';
-import { RedAccountEntityDto } from '../dto/redis.dto';
+import { RedAccountRedisInputDTO, RedAccountDto } from '../dto/redis.dto';
 import { ApiResponse } from '../dto/common.dto';
 
 @Controller('redis')
@@ -16,8 +16,8 @@ export class RedisController {
   constructor(private readonly redisService: RedisService) {}
 
   @Post('create')
-  @HttpCode(HttpStatus.OK)
-  create(@Body() body: RedAccountEntityDto): ApiResponse<any> {
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() body: RedAccountRedisInputDTO): ApiResponse<RedAccountDto> {
     return this.redisService.create(body);
   }
 
@@ -26,7 +26,7 @@ export class RedisController {
   findByDocument(
     @Param('documentType') documentType: string,
     @Param('documentNumber') documentNumber: string,
-  ): ApiResponse<any> {
+  ): ApiResponse<RedAccountDto> {
     return this.redisService.findByDocument(documentType, documentNumber);
   }
 }

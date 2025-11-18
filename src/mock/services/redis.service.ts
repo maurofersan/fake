@@ -1,71 +1,116 @@
 import { Injectable } from '@nestjs/common';
-import { MockDataGeneratorService } from '../utils/mock-data-generator.service';
+import { randomUUID } from 'crypto';
 import { FakeStorageService } from '../utils/fake-storage.service';
 import { ApiResponseBuilderService } from '../utils/api-response-builder.service';
-import { RedAccountEntityDto } from '../dto/redis.dto';
+import { RedAccountRedisInputDTO, RedAccountDto } from '../dto/redis.dto';
 import { ApiResponse } from '../dto/common.dto';
 
 @Injectable()
 export class RedisService {
   constructor(
-    private readonly mockDataGenerator: MockDataGeneratorService,
     private readonly fakeStorage: FakeStorageService,
     private readonly apiResponseBuilder: ApiResponseBuilderService,
   ) {}
 
-  create(data: RedAccountEntityDto): ApiResponse<any> {
-    // Generate mock RedAccountEntity response
-    const redAccount = this.mockDataGenerator.generateFromSchema(
-      'RedAccountEntity',
-      null,
-    );
-
-    // Merge with provided data from request body (prioritize user data over mock)
-    Object.keys(data).forEach((key) => {
-      if (data[key] !== undefined && data[key] !== null) {
-        redAccount[key] = data[key];
-      }
-    });
-
-    // Persist data in memory storage
-    const storageKey = `red-account:${redAccount.accountId}`;
-    this.fakeStorage.setItem(storageKey, redAccount);
-
-    // Also store by document for findByDocument lookup
-    if (redAccount.documentType && redAccount.documentNumber) {
-      const documentKey = `red-account:doc:${redAccount.documentType}:${redAccount.documentNumber}`;
-      this.fakeStorage.setItem(documentKey, redAccount);
-    }
-
-    return this.apiResponseBuilder.success(
-      redAccount,
-      'Cuenta Redis creada exitosamente',
-    );
-  }
-
-  findByDocument(
-    documentType: string,
-    documentNumber: string,
-  ): ApiResponse<any> {
-    // Try to get from storage first
-    const documentKey = `red-account:doc:${documentType}:${documentNumber}`;
-    const stored = this.fakeStorage.getItem(documentKey);
-
-    let redAccount: any;
-
-    if (stored) {
-      redAccount = stored;
-    } else {
-      // If not found, generate new mock data
-      redAccount = this.mockDataGenerator.generateFromSchema(
-        'RedAccountEntity',
-        null,
+  /**
+   * Creates or updates Redis account data
+   * Merges new data with existing data if documentType and documentNumber already exist
+   * Generates idTransaction if it doesn't exist
+   */
+  create(data: RedAccountRedisInputDTO): ApiResponse<RedAccountDto> {
+    // Validate required fields for initial creation
+    if (!data.documentType || !data.documentNumber) {
+      return this.apiResponseBuilder.error(
+        'documentType y documentNumber son requeridos',
+        400,
       );
     }
 
-    return this.apiResponseBuilder.success(
+    const documentKey = `red-account:doc:${data.documentType}:${data.documentNumber}`;
+
+    // Get existing data if it exists
+    const existingData = this.fakeStorage.getItem(
+      documentKey,
+    ) as RedAccountDto | null;
+
+    // Initialize with existing data or create new structure
+    const redAccount: RedAccountDto = existingData
+      ? { ...existingData }
+      : {
+          idTransaction: randomUUID(),
+          idScreen: null,
+          minutsScreen: 0,
+          fullName: null,
+          lastName: null,
+          motherLastName: null,
+          firstName: null,
+          birthDate: null,
+          civilStatus: null,
+          gender: null,
+          streetType: null,
+          streetName: null,
+          houseNumber: null,
+          department: null,
+          district: null,
+          province: null,
+          documentType: data.documentType,
+          documentNumber: data.documentNumber,
+          phoneNumber: null,
+          email: null,
+          isPeruvian: null,
+          acceptedPrivacyPolicy: null,
+          acceptedTermsAndConditions: null,
+          acceptedreadContract: null,
+          productId: null,
+          productName: null,
+          accountTypeId: null,
+          accountTypeName: null,
+          currency: null,
+          statusValOtp: null,
+          statusValZtrus: null,
+          pathImageDocumentFront: null,
+          pathImageDocumentReverse: null,
+          pathImagePersonSelfie: null,
+        };
+
+    // Merge new data with existing data (new data takes precedence)
+    Object.keys(data).forEach((key) => {
+      if (data[key] !== undefined && data[key] !== null) {
+        (redAccount as any)[key] = data[key];
+      }
+    });
+
+    // Ensure idTransaction is set (should never be null after creation)
+    if (!redAccount.idTransaction) {
+      redAccount.idTransaction = randomUUID();
+    }
+
+    // Persist updated data
+    this.fakeStorage.setItem(documentKey, redAccount);
+
+    return this.apiResponseBuilder.created(
       redAccount,
-      'Cuenta Redis obtenida correctamente',
+      'Datos obtenidos con éxito',
     );
+  }
+
+  /**
+   * Retrieves Redis account data by document type and number
+   * Returns all saved data including idScreen to know which screen the user was on
+   */
+  findByDocument(
+    documentType: string,
+    documentNumber: string,
+  ): ApiResponse<RedAccountDto> {
+    const documentKey = `red-account:doc:${documentType}:${documentNumber}`;
+    const stored = this.fakeStorage.getItem(
+      documentKey,
+    ) as RedAccountDto | null;
+
+    if (!stored) {
+      return this.apiResponseBuilder.error('Datos no encontrados', 404);
+    }
+
+    return this.apiResponseBuilder.success(stored, 'Datos obtenidos con éxito');
   }
 }
