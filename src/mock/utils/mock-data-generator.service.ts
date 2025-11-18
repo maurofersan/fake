@@ -56,6 +56,7 @@ export class MockDataGeneratorService {
         .toISOString()
         .split('T')[0],
       phoneNumber: '9' + faker.string.numeric(8),
+      email: faker.internet.email(),
       maritalStatus: faker.helpers.arrayElement([
         'Soltero',
         'Casado',
