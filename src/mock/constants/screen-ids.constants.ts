@@ -5,7 +5,7 @@
  */
 export const SCREEN_IDS = {
   // ---------------------------------------------------------------------------
-  //  LOAN.
+  //  LOANS.
   // ---------------------------------------------------------------------------
   ONBOARDING_START_LOAN: 'PG_8FA91C4DEB2749C3AF82B1C2', // Bienvenida
   ONBOARDING_DATA_PRIVACY_LOAN: 'PG_1BC73D9F4A1C4BAF89E12F33', // Datos personales
