@@ -1,0 +1,1713 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "scp-shoncd1-becdproducts",
+    "description": "Shortcuts onboarding canal digital, Microservicio Gestión de productos",
+    "version": "1.0.0-SNAPSHOT"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8085",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Gestión de Redis Apertura de Cuenta",
+      "description": "Operaciones relacionadas con la gestión de Redis en la apertura de cuenta"
+    },
+    {
+      "name": "Gestión de Apertura de Cuenta",
+      "description": "Operaciones relacionadas con la apertura de cuenta"
+    },
+    {
+      "name": "AML",
+      "description": "Controllers AML"
+    },
+    {
+      "name": "Gestión de OTP",
+      "description": "Controllers OTP"
+    },
+    {
+      "name": "Gestión de Canal de captcha",
+      "description": "Operaciones relacionadas con la gestión de canal de captcha"
+    },
+    {
+      "name": "Gestión de EMAIL",
+      "description": "Controllers email"
+    },
+    {
+      "name": "Gestión de logs",
+      "description": "Operaciones relacionadas con la gestión de Logs en los productos"
+    }
+  ],
+  "paths": {
+    "/redis/create": {
+      "post": {
+        "tags": ["Gestión de Redis Apertura de Cuenta"],
+        "summary": "Se registran datos en Redis de forma local",
+        "description": "Registrar datos personales de onboarning del cliente",
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedAccountRedisInputDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Registro Existoso",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedAccountDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro no Existoso",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseRedAccountRedisDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/otp/verify": {
+      "post": {
+        "tags": ["Gestión de OTP"],
+        "summary": "Verificar OTP",
+        "description": "Verifica si el código OTP ingresado es válido",
+        "operationId": "verify",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyOTPRecord"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OTP válido",
+            "content": {
+              "/": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "TP inválido o expirado",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModelGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/otp/generate": {
+      "post": {
+        "tags": ["Gestión de OTP"],
+        "summary": "Generar OTP",
+        "description": "Generar un código OTP",
+        "operationId": "generate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateOTPRecord"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OTP generado correctamente",
+            "content": {
+              "/": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error al generar OTP",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModelGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs/create": {
+      "post": {
+        "tags": ["Gestión de logs"],
+        "summary": "Se registran datos en Logs en la Base de datos",
+        "description": "Registrar datos logs de onboarning del cliente",
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataGeneralLogRecord"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Registro Existoso",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionLogRecord"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro no Existoso",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseDataGeneralLogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/email/send": {
+      "post": {
+        "tags": ["Gestión de EMAIL"],
+        "summary": "Send email",
+        "description": "Endpoint to send an EMail!'",
+        "operationId": "send",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EMAILRecord"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "/": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModelGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account-openings/create": {
+      "post": {
+        "tags": ["Gestión de Apertura de Cuenta"],
+        "summary": "Registra una nueva apertura de cuenta",
+        "description": "Crea un registro en la apertura de cuenta y devuelve todos los datos registrados.",
+        "operationId": "createAccountOpening",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountOpeningRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Apertura de cuenta creada exitosamente",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountOpeningCodeRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos en la solicitud",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseAccountOpeningRecord"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account-openings/createSendExcel": {
+      "post": {
+        "tags": ["Gestión de Apertura de Cuenta"],
+        "summary": "Generara traama de una apertura de cuenta",
+        "description": "Generara traama en la apertura de cuenta y genera un excel con los datos.",
+        "operationId": "createSendExcel",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountOpeningRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Trama generada correctamente..",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountOpeningCodeRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos en la solicitud",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseExcelTramaRecord"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account-openings/createExcelByCode": {
+      "post": {
+        "tags": ["Gestión de Apertura de Cuenta"],
+        "summary": "Generara traama de una apertura de cuenta",
+        "description": "Generara traama en la apertura de cuenta y genera un excel con los datos.",
+        "operationId": "createExcelByCode",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountOpeningCodeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Trama generada correctamente..",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountOpeningCodeRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos en la solicitud",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseExcelTramaRecord"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/aml/findBy": {
+      "post": {
+        "tags": ["AML"],
+        "summary": "findBy aml",
+        "description": "Endpoint to findBy aml!'",
+        "operationId": "send_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AMLRecordFilter"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "/": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorModelGateway"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/redis/{documentType}/{documentNumber}": {
+      "get": {
+        "tags": ["Gestión de Redis Apertura de Cuenta"],
+        "summary": "Se obtienen datos en Redis de forma local",
+        "description": "Se obtienen datos personales de onboarning del cliente",
+        "operationId": "readAcount",
+        "parameters": [
+          {
+            "name": "documentType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "documentNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data obtenida correctamente...",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedAccountDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Datos no encontrados",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseRedAccountRedisDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/captcha/validate": {
+      "get": {
+        "tags": ["Gestión de Canal de captcha"],
+        "summary": "Se envia los datos al servicio de capcha",
+        "description": "Canal para servicio de capcha",
+        "operationId": "create_2",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Registro Existoso",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationResponseCaptchaResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro no Existoso",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationResponseCaptchaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account-openings/{id}": {
+      "get": {
+        "tags": ["Gestión de Apertura de Cuenta"],
+        "summary": "Obtiene una nueva apertura de cuenta",
+        "description": "Obtiene un registro en la apertura de cuenta y devuelve todos los datos registrados.",
+        "operationId": "getAccountOpeningById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Apertura de cuenta encontrada",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountOpeningCodeRequest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Apertura de cuenta no encontrada",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseAccountOpeningRecord"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account-openings/document": {
+      "get": {
+        "tags": ["Gestión de Apertura de Cuenta"],
+        "summary": "Obtiene una nueva apertura de cuenta por documento de cliente",
+        "description": "Obtiene un registro en la apertura de cuenta y devuelve todos los datos registrados por documento de cliente.",
+        "operationId": "getAccountOpeningByDocument",
+        "parameters": [
+          {
+            "name": "documentType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "documentNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Apertura de cuenta encontrada",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountOpeningCodeRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Apertura de cuenta no encontrada",
+            "content": {
+              "/": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVwDataClientAccountOpeningEntity"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RedAccountDto": {
+        "type": "object",
+        "properties": {
+          "idScreen": {
+            "type": "string"
+          },
+          "minutsScreen": {
+            "type": "number",
+            "format": "double"
+          },
+          "idTransaction": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "motherLastName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string"
+          },
+          "civilStatus": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "streetType": {
+            "type": "string"
+          },
+          "streetName": {
+            "type": "string"
+          },
+          "houseNumber": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "province": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isPeruvian": {
+            "type": "string"
+          },
+          "acceptedPrivacyPolicy": {
+            "type": "string"
+          },
+          "acceptedTermsAndConditions": {
+            "type": "string"
+          },
+          "acceptedreadContract": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "accountTypeId": {
+            "type": "string"
+          },
+          "accountTypeName": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "statusValOtp": {
+            "type": "string"
+          },
+          "statusValZtrus": {
+            "type": "string"
+          },
+          "pathImageDocumentFront": {
+            "type": "string"
+          },
+          "pathImageDocumentReverse": {
+            "type": "string"
+          },
+          "pathImagePersonSelfie": {
+            "type": "string"
+          }
+        }
+      },
+      "RedAccountRedisInputDTO": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string"
+          },
+          "idScreen": {
+            "type": "string"
+          },
+          "minutsScreen": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "motherLastName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string"
+          },
+          "civilStatus": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "streetType": {
+            "type": "string"
+          },
+          "streetName": {
+            "type": "string"
+          },
+          "houseNumber": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "province": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isPeruvian": {
+            "type": "string"
+          },
+          "acceptedPrivacyPolicy": {
+            "type": "string"
+          },
+          "acceptedTermsAndConditions": {
+            "type": "string"
+          },
+          "acceptedreadContract": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "accountTypeId": {
+            "type": "string"
+          },
+          "accountTypeName": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "statusValOtp": {
+            "type": "string"
+          },
+          "statusValZtrus": {
+            "type": "string"
+          },
+          "pathImageDocumentFront": {
+            "type": "string"
+          },
+          "pathImageDocumentReverse": {
+            "type": "string"
+          },
+          "pathImagePersonSelfie": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponseRedAccountRedisDTO": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/RedAccountRedisDTO"
+          }
+        }
+      },
+      "RedAccountRedisDTO": {
+        "type": "object",
+        "properties": {
+          "idScreen": {
+            "type": "string"
+          },
+          "minutsScreen": {
+            "type": "number",
+            "format": "double"
+          },
+          "idTransaction": {
+            "type": "string",
+            "readOnly": true
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "motherLastName": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "birthDate": {
+            "type": "string"
+          },
+          "civilStatus": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "streetType": {
+            "type": "string"
+          },
+          "streetName": {
+            "type": "string"
+          },
+          "houseNumber": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string"
+          },
+          "province": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isPeruvian": {
+            "type": "string"
+          },
+          "acceptedPrivacyPolicy": {
+            "type": "string"
+          },
+          "acceptedTermsAndConditions": {
+            "type": "string"
+          },
+          "acceptedreadContract": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "accountTypeId": {
+            "type": "string"
+          },
+          "accountTypeName": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "statusValOtp": {
+            "type": "string"
+          },
+          "statusValZtrus": {
+            "type": "string"
+          },
+          "pathImageDocumentFront": {
+            "type": "string"
+          },
+          "pathImageDocumentReverse": {
+            "type": "string"
+          },
+          "pathImagePersonSelfie": {
+            "type": "string"
+          }
+        }
+      },
+      "VerifyOTPRecord": {
+        "type": "object",
+        "properties": {
+          "device": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorModelGateway": {
+        "type": "object",
+        "description": "Darwin Gateway error",
+        "properties": {
+          "httpCode": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Http error code",
+            "example": 404
+          },
+          "httpMessage": {
+            "type": "string",
+            "description": "description of the error",
+            "example": "Not Found"
+          },
+          "moreInformation": {
+            "type": "string",
+            "description": "description of the error",
+            "example": "Not Found in /v1/applications//gateways"
+          }
+        }
+      },
+      "GenerateOTPRecord": {
+        "type": "object",
+        "properties": {
+          "device": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "TransactionLogRecord": {
+        "type": "object",
+        "properties": {
+          "transactionLogId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionLogSessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionLogProductId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionLogSubProductId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionLogDocumentType": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionLogDocumentNumber": {
+            "type": "string"
+          },
+          "transationCodeProduct": {
+            "type": "string"
+          },
+          "transactionLogEventType": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionLogEventStatus": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionLogDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "transactionLogPageId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionLogComments": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "DataGeneralLogRecord": {
+        "type": "object",
+        "properties": {
+          "transactionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionSessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionDocumentType": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionDocumentNumber": {
+            "type": "string"
+          },
+          "transactionPaternalLastname": {
+            "type": "string"
+          },
+          "transactionMaternalLastname": {
+            "type": "string"
+          },
+          "transactionFirstName": {
+            "type": "string"
+          },
+          "transactionFullName": {
+            "type": "string"
+          },
+          "transactionGender": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionMaritalStatus": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionBirthDate": {
+            "type": "string"
+          },
+          "transactionProductAcquired": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionSubproductAcquired": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionCurrency": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transactionEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transactionIpAddress": {
+            "type": "string"
+          },
+          "transactionBrowserUsed": {
+            "type": "string"
+          },
+          "transactionIncompleteReason": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traceabilityTraceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traceabilityTransactionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traceabilityPageInternalName": {
+            "type": "string"
+          },
+          "traceabilityElementName": {
+            "type": "string"
+          },
+          "traceabilityEvaluatedValue": {
+            "type": "string"
+          },
+          "traceabilityIsValid": {
+            "type": "boolean"
+          },
+          "traceabilityErrorMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponseDataGeneralLogResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DataGeneralLogResponse"
+          }
+        }
+      },
+      "DataGeneralLogResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionSessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionDocumentType": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionDocumentNumber": {
+            "type": "string"
+          },
+          "transactionPaternalLastname": {
+            "type": "string"
+          },
+          "transactionMaternalLastname": {
+            "type": "string"
+          },
+          "transactionFirstName": {
+            "type": "string"
+          },
+          "transactionFullName": {
+            "type": "string"
+          },
+          "transactionGender": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionMaritalStatus": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionBirthDate": {
+            "type": "string"
+          },
+          "transactionProductAcquired": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionSubproductAcquired": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionCurrency": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transactionStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transactionEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transactionIpAddress": {
+            "type": "string"
+          },
+          "transactionBrowserUsed": {
+            "type": "string"
+          },
+          "transactionIncompleteReason": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "traceabilityTraceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traceabilityTransactionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traceabilityPageInternalName": {
+            "type": "string"
+          },
+          "traceabilityElementName": {
+            "type": "string"
+          },
+          "traceabilityEvaluatedValue": {
+            "type": "string"
+          },
+          "traceabilityIsValid": {
+            "type": "boolean"
+          },
+          "traceabilityErrorMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "EMAILRecord": {
+        "type": "object",
+        "properties": {
+          "device": {
+            "type": "string"
+          },
+          "toEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ccEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subject": {
+            "type": "string"
+          },
+          "htmlBody": {
+            "type": "string"
+          },
+          "variables": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AccountOpeningCodeRequest": {
+        "type": "object",
+        "description": "Parámetros para obtener información del lead",
+        "properties": {
+          "document": {
+            "type": "string",
+            "description": "Número de documento del cliente",
+            "example": 12345678,
+            "minLength": 1
+          },
+          "type_document": {
+            "type": "string",
+            "description": "Tipo de documento del cliente (por ejemplo, DNI, CE, PASAPORTE)",
+            "example": "DNI",
+            "minLength": 1
+          },
+          "number_transaction": {
+            "type": "string",
+            "description": "Número de Operación (por 91ba39fa-754a-471e-8606-bcdc064496dd)",
+            "example": "91ba39fa-754a-471e-8606-bcdc064496dd",
+            "minLength": 1
+          }
+        },
+        "required": ["document", "number_transaction", "type_document"]
+      },
+      "AccountOpeningRequest": {
+        "type": "object",
+        "description": "Parámetros para obtener información del lead",
+        "properties": {
+          "document": {
+            "type": "string",
+            "description": "Número de documento del cliente",
+            "example": 12345678,
+            "minLength": 1
+          },
+          "type_document": {
+            "type": "string",
+            "description": "Tipo de documento del cliente (por ejemplo, DNI, CE, PASAPORTE)",
+            "example": "DNI",
+            "minLength": 1
+          }
+        },
+        "required": ["document", "type_document"]
+      },
+      "AccountOpeningRecord": {
+        "type": "object",
+        "properties": {
+          "accountOpeningId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "subproductId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subproductName": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string"
+          },
+          "openingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "string"
+          },
+          "partnerStoreId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "partnerId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ApiResponseAccountOpeningRecord": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AccountOpeningRecord"
+          }
+        }
+      },
+      "ApiResponseExcelTramaRecord": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ExcelTramaRecord"
+          }
+        }
+      },
+      "ExcelTramaRecord": {
+        "type": "object",
+        "properties": {
+          "statusGenerate": {
+            "type": "boolean"
+          },
+          "messageGenerate": {
+            "type": "string"
+          }
+        }
+      },
+      "AMLRecordFilter": {
+        "type": "object",
+        "properties": {
+          "citizenship": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "dateBirth": {
+            "type": "string"
+          },
+          "dni": {
+            "type": "string"
+          }
+        }
+      },
+      "CaptchaResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "score": {
+            "type": "number",
+            "format": "float"
+          },
+          "action": {
+            "type": "string"
+          }
+        }
+      },
+      "IntegrationResponseCaptchaResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/CaptchaResponse"
+          }
+        }
+      },
+      "ApiResponseVwDataClientAccountOpeningEntity": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/VwDataClientAccountOpeningEntity"
+          }
+        }
+      },
+      "VwDataClientAccountOpeningEntity": {
+        "type": "object",
+        "properties": {
+          "accountOpeningId": {
+            "type": "string"
+          },
+          "accountOpeningSessionId": {
+            "type": "string"
+          },
+          "origen": {
+            "type": "string"
+          },
+          "consentimientoInicial": {
+            "type": "string"
+          },
+          "tipoDocumento": {
+            "type": "string"
+          },
+          "numeroDocumento": {
+            "type": "string"
+          },
+          "apellidoPaterno": {
+            "type": "string"
+          },
+          "apellidoMaterno": {
+            "type": "string"
+          },
+          "nombre1": {
+            "type": "string"
+          },
+          "nombre2": {
+            "type": "string"
+          },
+          "sexo": {
+            "type": "string"
+          },
+          "estadoCivil": {
+            "type": "string"
+          },
+          "fechaNacimiento": {
+            "type": "string"
+          },
+          "paisOrigen": {
+            "type": "string"
+          },
+          "nacionalidad": {
+            "type": "string"
+          },
+          "tipoResidencia": {
+            "type": "string"
+          },
+          "lugarNacimientoDepartamento": {
+            "type": "string"
+          },
+          "lugarNacimientoProvincia": {
+            "type": "string"
+          },
+          "lugarNacimientoDistrito": {
+            "type": "string"
+          },
+          "nombrePareja": {
+            "type": "string"
+          },
+          "dniPareja": {
+            "type": "string"
+          },
+          "nacionalidadPareja": {
+            "type": "string"
+          },
+          "fechaNacimientoPareja": {
+            "type": "string"
+          },
+          "via": {
+            "type": "string"
+          },
+          "nombreVia": {
+            "type": "string"
+          },
+          "nroDptoPisoMzLote": {
+            "type": "string"
+          },
+          "zona": {
+            "type": "string"
+          },
+          "nombreZona": {
+            "type": "string"
+          },
+          "referencia": {
+            "type": "string"
+          },
+          "departamento": {
+            "type": "string"
+          },
+          "distrito": {
+            "type": "string"
+          },
+          "provincia": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "celular": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "cargoActual": {
+            "type": "string"
+          },
+          "ocupacion": {
+            "type": "string"
+          },
+          "profesion": {
+            "type": "string"
+          },
+          "fechaIngreso": {
+            "type": "string"
+          },
+          "negocioPropio": {
+            "type": "string"
+          },
+          "tipoIngreso": {
+            "type": "string"
+          },
+          "tratamientoDatos": {
+            "type": "string"
+          },
+          "pep": {
+            "type": "string"
+          },
+          "ciudadaniaUSA": {
+            "type": "string"
+          },
+          "residenteFiscal": {
+            "type": "string"
+          },
+          "paisMayorCuenta": {
+            "type": "string"
+          },
+          "tipoCuenta": {
+            "type": "string"
+          },
+          "moneda": {
+            "type": "string"
+          },
+          "origenFondos": {
+            "type": "string"
+          },
+          "cuentaTerceros": {
+            "type": "string"
+          },
+          "filtroDocumentoCliente": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
