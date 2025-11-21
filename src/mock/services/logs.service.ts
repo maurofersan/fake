@@ -52,11 +52,8 @@ export class LogsService {
     return (
       !!data.transactionSessionId &&
       !!data.transactionStartDate &&
-      !!data.createdBy &&
-      !!data.traceabilityPageInternalName &&
-      !!data.traceabilityElementName &&
-      data.traceabilityIsValid !== undefined &&
-      !data.transactionId
+      (!!data.createdBy || data.createdBy === null) &&
+      !!data.traceabilityPageInternalName
     );
   }
 
