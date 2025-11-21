@@ -47,7 +47,7 @@ export class SettingsController {
     return this.settingsService.listTypeAccounts();
   }
 
-  @Get('catalog/describe-catalog/:type')
+  @Get('catalog/final-catalog/:type')
   @HttpCode(HttpStatus.OK)
   findDescribeCatalogByType(
     @Param('type') type: string,
