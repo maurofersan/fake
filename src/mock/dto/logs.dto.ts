@@ -47,6 +47,32 @@ export class LogCreateRequestDto {
   createdBy?: string;
   updatedAt?: string;
   updatedBy?: string;
+
+  // Additional optional fields for final transaction
+  phone?: string;
+  email?: string;
+  dni?: string;
+  peruvianBirth?: boolean;
+  privacyAccepted?: boolean;
+  recaptchaValid?: boolean;
+  productAcquired?: string;
+  subproductAcquired?: string;
+  currency?: string;
+  otpMail?: string;
+  authorizedBiometricData?: boolean;
+  sdkDniFront?: string;
+  sdkDniBack?: string;
+  sdkDniSelfie?: string;
+  consultZytrus?: boolean;
+  consultGesintel?: boolean;
+  streetType?: string;
+  streetName?: string;
+  streetNumber?: string;
+  department?: string;
+  province?: string;
+  district?: string;
+  checkContract?: boolean;
+  checkSwornStatement?: boolean;
 }
 
 /**
@@ -108,4 +134,29 @@ export class DataGeneralLogResponse {
   traceabilityEvaluatedValue?: string;
   traceabilityIsValid?: boolean;
   traceabilityErrorMessage?: string;
+  // Additional optional fields for final transaction
+  phone?: string;
+  email?: string;
+  dni?: string;
+  peruvianBirth?: boolean;
+  privacyAccepted?: boolean;
+  recaptchaValid?: boolean;
+  productAcquired?: string;
+  subproductAcquired?: string;
+  currency?: string;
+  otpMail?: string;
+  authorizedBiometricData?: boolean;
+  sdkDniFront?: string;
+  sdkDniBack?: string;
+  sdkDniSelfie?: string;
+  consultZytrus?: boolean;
+  consultGesintel?: boolean;
+  streetType?: string;
+  streetName?: string;
+  streetNumber?: string;
+  department?: string;
+  province?: string;
+  district?: string;
+  checkContract?: boolean;
+  checkSwornStatement?: boolean;
 }

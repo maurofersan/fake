@@ -243,6 +243,31 @@ export class LogsService {
           : existingLog?.traceabilityIsValid,
       traceabilityErrorMessage:
         data.traceabilityErrorMessage || existingLog?.traceabilityErrorMessage,
+      // Additional optional fields for final transaction
+      phone: data.phone,
+      email: data.email,
+      dni: data.dni,
+      peruvianBirth: data.peruvianBirth,
+      privacyAccepted: data.privacyAccepted,
+      recaptchaValid: data.recaptchaValid,
+      productAcquired: data.productAcquired,
+      subproductAcquired: data.subproductAcquired,
+      currency: data.currency,
+      otpMail: data.otpMail,
+      authorizedBiometricData: data.authorizedBiometricData,
+      sdkDniFront: data.sdkDniFront,
+      sdkDniBack: data.sdkDniBack,
+      sdkDniSelfie: data.sdkDniSelfie,
+      consultZytrus: data.consultZytrus,
+      consultGesintel: data.consultGesintel,
+      streetType: data.streetType,
+      streetName: data.streetName,
+      streetNumber: data.streetNumber,
+      department: data.department,
+      province: data.province,
+      district: data.district,
+      checkContract: data.checkContract,
+      checkSwornStatement: data.checkSwornStatement,
     };
 
     // Ensure createdAt and createdBy are set if this is a new entry
