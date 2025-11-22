@@ -45,16 +45,11 @@ export class LogsService {
 
   /**
    * Checks if the request is an initial creation
-   * Initial creation has: transactionSessionId, transactionStartDate, createdBy, and traceability fields
+   * Initial creation has: transactionStartDate
    * But NOT transactionId
    */
   private isInitialCreation(data: LogCreateRequestDto): boolean {
-    return (
-      !!data.transactionSessionId &&
-      !!data.transactionStartDate &&
-      (!!data.createdBy || data.createdBy === null) &&
-      !!data.traceabilityPageInternalName
-    );
+    return !!data.transactionStartDate && !data.transactionId;
   }
 
   /**
@@ -107,34 +102,64 @@ export class LogsService {
     // Generate a new transactionId
     const transactionId = randomUUID();
 
-    // Create the log entry
+    // Format transactionStartDate without timezone indicator
+    const formattedStartDate = data.transactionStartDate
+      ? this.formatDateWithoutTimezone(data.transactionStartDate)
+      : null;
+
+    // Create the log entry with all fields set to null except transactionId, transactionStartDate, and traceabilityTransactionId
     const logEntry: DataGeneralLogResponse = {
       transactionId,
-      transactionSessionId: data.transactionSessionId,
-      transactionStartDate: data.transactionStartDate,
-      createdBy: data.createdBy,
-      createdAt: new Date().toISOString(),
+      transactionSessionId: null,
+      transactionDocumentType: null,
+      transactionDocumentNumber: null,
+      transactionPaternalLastname: null,
+      transactionMaternalLastname: null,
+      transactionFirstName: null,
+      transactionFullName: null,
+      transactionGender: null,
+      transactionMaritalStatus: null,
+      transactionBirthDate: null,
+      transactionProductAcquired: null,
+      transactionSubproductAcquired: null,
+      transactionCurrency: null,
+      transactionStartDate: formattedStartDate,
+      transactionEndDate: null,
+      transactionIpAddress: null,
+      transactionBrowserUsed: null,
+      transactionIncompleteReason: null,
+      isActive: null,
+      createdBy: null,
+      createdAt: null,
+      updatedBy: null,
+      updatedAt: null,
+      traceabilityTraceId: null,
       traceabilityTransactionId: transactionId, // Use the same transactionId for traceability
-      traceabilityPageInternalName: data.traceabilityPageInternalName,
-      traceabilityElementName: data.traceabilityElementName,
-      traceabilityEvaluatedValue: data.traceabilityEvaluatedValue,
-      traceabilityIsValid: data.traceabilityIsValid,
-      traceabilityErrorMessage: data.traceabilityErrorMessage,
-      isActive: true,
+      traceabilityPageInternalName: null,
+      traceabilityElementName: null,
+      traceabilityEvaluatedValue: null,
+      traceabilityIsValid: null,
+      traceabilityErrorMessage: null,
     };
 
-    // Store by transactionSessionId for easy retrieval
-    const sessionKey = `log:session:${data.transactionSessionId}`;
-    this.fakeStorage.setItem(sessionKey, logEntry);
-
-    // Also store by transactionId
+    // Store by transactionId
     const transactionKey = `log:transaction:${transactionId}`;
     this.fakeStorage.setItem(transactionKey, logEntry);
 
-    return this.apiResponseBuilder.success(
+    return this.apiResponseBuilder.created(
       logEntry,
-      'Log de transacción creado exitosamente',
+      'Transancción ejecutada con éxito',
     );
+  }
+
+  /**
+   * Formats a date string to remove timezone indicator
+   * Converts "2025-11-21T16:20:28.217Z" to "2025-11-21T16:20:28.217"
+   */
+  private formatDateWithoutTimezone(dateString: string): string {
+    if (!dateString) return null;
+    // Remove timezone indicator (Z at the end)
+    return dateString.replace(/Z$/, '');
   }
 
   /**
@@ -243,31 +268,6 @@ export class LogsService {
           : existingLog?.traceabilityIsValid,
       traceabilityErrorMessage:
         data.traceabilityErrorMessage || existingLog?.traceabilityErrorMessage,
-      // Additional optional fields for final transaction
-      phone: data.phone,
-      email: data.email,
-      dni: data.dni,
-      peruvianBirth: data.peruvianBirth,
-      privacyAccepted: data.privacyAccepted,
-      recaptchaValid: data.recaptchaValid,
-      productAcquired: data.productAcquired,
-      subproductAcquired: data.subproductAcquired,
-      currency: data.currency,
-      otpMail: data.otpMail,
-      authorizedBiometricData: data.authorizedBiometricData,
-      sdkDniFront: data.sdkDniFront,
-      sdkDniBack: data.sdkDniBack,
-      sdkDniSelfie: data.sdkDniSelfie,
-      consultZytrus: data.consultZytrus,
-      consultGesintel: data.consultGesintel,
-      streetType: data.streetType,
-      streetName: data.streetName,
-      streetNumber: data.streetNumber,
-      department: data.department,
-      province: data.province,
-      district: data.district,
-      checkContract: data.checkContract,
-      checkSwornStatement: data.checkSwornStatement,
     };
 
     // Ensure createdAt and createdBy are set if this is a new entry
