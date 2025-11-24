@@ -1,6 +1,20 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Query,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { LogsService } from '../services/logs.service';
-import { LogCreateRequestDto, DataGeneralLogResponse } from '../dto/logs.dto';
+import {
+  LogCreateRequestDto,
+  DataGeneralLogResponse,
+  ConsultLogQueryDto,
+  TransactionLogRecord,
+  ConsultDataLogResponse,
+} from '../dto/logs.dto';
 import { ApiResponse } from '../dto/common.dto';
 
 @Controller('logs')
@@ -13,5 +27,13 @@ export class LogsController {
     @Body() body: LogCreateRequestDto,
   ): ApiResponse<DataGeneralLogResponse> {
     return this.logsService.create(body);
+  }
+
+  @Get('consultLog')
+  @HttpCode(HttpStatus.OK)
+  consultLog(
+    @Query() query: ConsultLogQueryDto,
+  ): ApiResponse<TransactionLogRecord> | ApiResponse<ConsultDataLogResponse> {
+    return this.logsService.consultLog(query);
   }
 }

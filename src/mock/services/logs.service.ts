@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { FakeStorageService } from '../utils/fake-storage.service';
 import { ApiResponseBuilderService } from '../utils/api-response-builder.service';
-import { LogCreateRequestDto, DataGeneralLogResponse } from '../dto/logs.dto';
+import {
+  LogCreateRequestDto,
+  DataGeneralLogResponse,
+  ConsultLogQueryDto,
+  TransactionLogRecord,
+  ConsultDataLogResponse,
+} from '../dto/logs.dto';
 import { ApiResponse } from '../dto/common.dto';
 
 /**
@@ -288,6 +294,68 @@ export class LogsService {
     return this.apiResponseBuilder.success(
       finalLog,
       'Transacción completada exitosamente',
+    );
+  }
+
+  /**
+   * Consults a log by document type, document number, and page name
+   * Returns ApiResponse<TransactionLogRecord> if found, or ApiResponse<ConsultDataLogResponse> if not found
+   */
+  consultLog(
+    query: ConsultLogQueryDto,
+  ): ApiResponse<TransactionLogRecord> | ApiResponse<ConsultDataLogResponse> {
+    // Search for logs matching the criteria
+    // We'll search through stored logs by document type, document number, and page name
+    const allKeys = this.fakeStorage.getAllKeys();
+    const logKeys = allKeys.filter((key) => key.startsWith('log:transaction:'));
+
+    // Find matching log entry
+    for (const key of logKeys) {
+      const logEntry = this.fakeStorage.getItem(
+        key,
+      ) as DataGeneralLogResponse | null;
+
+      if (
+        logEntry &&
+        logEntry.transactionDocumentType === query.typeDocument &&
+        logEntry.transactionDocumentNumber === query.numberDocument &&
+        logEntry.traceabilityPageInternalName === query.namePage
+      ) {
+        // Convert DataGeneralLogResponse to TransactionLogRecord
+        const transactionLog: TransactionLogRecord = {
+          transactionLogId: logEntry.transactionId || randomUUID(),
+          transactionLogSessionId: logEntry.transactionSessionId || '',
+          transactionLogProductId: logEntry.transactionProductAcquired,
+          transactionLogSubProductId: logEntry.transactionSubproductAcquired,
+          transactionLogDocumentType: logEntry.transactionDocumentType,
+          transactionLogDocumentNumber: logEntry.transactionDocumentNumber,
+          transactionLogPageId: logEntry.traceabilityPageInternalName,
+          transactionLogDate: logEntry.transactionStartDate,
+          transactionLogComments: logEntry.transactionIncompleteReason,
+          createdAt: logEntry.createdAt,
+          createdBy: logEntry.createdBy,
+          updatedAt: logEntry.updatedAt,
+          updatedBy: logEntry.updatedBy,
+        };
+
+        return this.apiResponseBuilder.success(
+          transactionLog,
+          'Registro Existoso',
+        );
+      }
+    }
+
+    // If not found, return error response
+    const errorData: ConsultDataLogResponse = {
+      documentType: query.typeDocument,
+      documentNumber: query.numberDocument,
+      pageInternalName: query.namePage,
+    };
+
+    return this.apiResponseBuilder.error(
+      'Registro no Existoso',
+      404,
+      errorData,
     );
   }
 }

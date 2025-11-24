@@ -109,3 +109,36 @@ export class DataGeneralLogResponse {
   traceabilityIsValid?: boolean;
   traceabilityErrorMessage?: string;
 }
+
+/**
+ * Query DTO for consultLog endpoint
+ * Based on /logs/consultLog GET endpoint parameters
+ */
+export class ConsultLogQueryDto {
+  typeDocument: string; // UUID format
+  numberDocument: string;
+  namePage: string;
+}
+
+/**
+ * Response DTO for consult log data
+ * Based on ConsultDataLogResponse schema from swagger
+ */
+export class ConsultDataLogResponse {
+  fullName?: string;
+  currency?: string; // UUID format
+  productAcquired?: string; // UUID format
+  evaluatedValue?: string;
+  transactionId?: string; // UUID format
+  maritalStatus?: string; // UUID format
+  elementName?: string;
+  documentType?: string; // UUID format
+  gender?: string; // UUID format
+  documentNumber?: string;
+  birthDate?: string;
+  firstName?: string;
+  paternalLastname?: string;
+  maternalLastname?: string;
+  pageInternalName?: string;
+  subProductAcquired?: string; // UUID format
+}
