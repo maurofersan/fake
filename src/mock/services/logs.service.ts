@@ -307,6 +307,7 @@ export class LogsService {
     // Search for logs matching the criteria
     // We'll search through stored logs by document type, document number, and page name
     const allKeys = this.fakeStorage.getAllKeys();
+    console.log('allKeys::', allKeys);
     const logKeys = allKeys.filter((key) => key.startsWith('log:transaction:'));
 
     // Find matching log entry
@@ -314,7 +315,7 @@ export class LogsService {
       const logEntry = this.fakeStorage.getItem(
         key,
       ) as DataGeneralLogResponse | null;
-
+      console.log('logEntry::', logEntry);
       if (
         logEntry &&
         logEntry.transactionDocumentType === query.typeDocument &&
