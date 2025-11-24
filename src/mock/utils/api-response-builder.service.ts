@@ -42,16 +42,18 @@ export class ApiResponseBuilderService {
    * Builds an error API response
    * @param message - Error message
    * @param status - HTTP status code (default: 500)
+   * @param data - Optional error data
    */
-  error(
+  error<T = null>(
     message: string,
     status: number = HttpStatus.INTERNAL_SERVER_ERROR,
-  ): ApiResponse<null> {
+    data: T = null as T,
+  ): ApiResponse<T> {
     return {
       success: false,
       status,
       message,
-      data: null,
+      data,
     };
   }
 }

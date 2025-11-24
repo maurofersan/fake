@@ -19,4 +19,8 @@ export class FakeStorageService {
   clear() {
     this.data = {};
   }
+
+  getAllKeys(): string[] {
+    return Object.keys(this.data);
+  }
 }

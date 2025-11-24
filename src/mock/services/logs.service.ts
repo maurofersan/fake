@@ -303,7 +303,7 @@ export class LogsService {
    */
   consultLog(
     query: ConsultLogQueryDto,
-  ): ApiResponse<TransactionLogRecord> | ApiResponse<ConsultDataLogResponse> {
+  ): ApiResponse<TransactionLogRecord | ConsultDataLogResponse> {
     // Search for logs matching the criteria
     // We'll search through stored logs by document type, document number, and page name
     const allKeys = this.fakeStorage.getAllKeys();
