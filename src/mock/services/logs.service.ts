@@ -171,6 +171,7 @@ export class LogsService {
   /**
    * Handles per-input updates
    * Updates traceability data for an existing transaction
+   * Also saves individual traceability records for consultLog endpoint
    */
   private handlePerInput(
     data: LogCreateRequestDto,
@@ -203,6 +204,13 @@ export class LogsService {
 
     // Persist updated data
     this.fakeStorage.setItem(transactionKey, updatedLog);
+
+    // Also save individual traceability record for consultLog
+    // This allows multiple traceability records per transaction/page
+    if (data.traceabilityPageInternalName && data.traceabilityElementName) {
+      const traceabilityKey = `log:traceability:${data.transactionId}:${data.traceabilityPageInternalName}:${data.traceabilityElementName}`;
+      this.fakeStorage.setItem(traceabilityKey, updatedLog);
+    }
 
     // Also update by sessionId if available
     if (updatedLog.transactionSessionId) {
@@ -298,50 +306,64 @@ export class LogsService {
   }
 
   /**
-   * Consults a log by transactionId and page name
-   * Returns ApiResponse<TransactionLogRecord> if found, or ApiResponse<ConsultDataLogResponse[]> if not found
+   * Consults logs by transactionId and page name
+   * Returns ApiResponse<ConsultDataLogResponse[]> with all traceability records matching the criteria
    */
-  consultLog(
-    query: ConsultLogQueryDto,
-  ): ApiResponse<TransactionLogRecord | ConsultDataLogResponse[]> {
-    // Search for log by transactionId
-    const transactionKey = `log:transaction:${query.transactionId}`;
-    const logEntry = this.fakeStorage.getItem(
-      transactionKey,
-    ) as DataGeneralLogResponse | null;
+  consultLog(query: ConsultLogQueryDto): ApiResponse<ConsultDataLogResponse[]> {
+    // Search for all traceability records matching the transactionId and page name
+    const allKeys = this.fakeStorage.getAllKeys();
+    const traceabilityKeys = allKeys.filter((key) =>
+      key.startsWith(
+        `log:traceability:${query.transactionId}:${query.namePage}:`,
+      ),
+    );
 
-    // Check if log exists and matches the page name
-    if (logEntry && logEntry.traceabilityPageInternalName === query.namePage) {
-      // Convert DataGeneralLogResponse to TransactionLogRecord
-      const transactionLog: TransactionLogRecord = {
-        transactionLogId: logEntry.transactionId || randomUUID(),
-        transactionLogSessionId: logEntry.transactionSessionId || '',
-        transactionLogProductId: logEntry.transactionProductAcquired,
-        transactionLogSubProductId: logEntry.transactionSubproductAcquired,
-        transactionLogDocumentType: logEntry.transactionDocumentType,
-        transactionLogDocumentNumber: logEntry.transactionDocumentNumber,
-        transactionLogPageId: logEntry.traceabilityPageInternalName,
-        transactionLogDate: logEntry.transactionStartDate,
-        transactionLogComments: logEntry.transactionIncompleteReason,
-        createdAt: logEntry.createdAt,
-        createdBy: logEntry.createdBy,
-        updatedAt: logEntry.updatedAt,
-        updatedBy: logEntry.updatedBy,
-      };
+    const results: ConsultDataLogResponse[] = [];
 
+    // Find all traceability entries that match the transactionId and page name
+    for (const key of traceabilityKeys) {
+      const logEntry = this.fakeStorage.getItem(
+        key,
+      ) as DataGeneralLogResponse | null;
+
+      if (logEntry && logEntry.traceabilityElementName) {
+        // Convert DataGeneralLogResponse to ConsultDataLogResponse
+        const consultData: ConsultDataLogResponse = {
+          fullName: logEntry.transactionFullName || null,
+          currency: logEntry.transactionCurrency || null,
+          evaluatedValue: logEntry.traceabilityEvaluatedValue || null,
+          productAcquired: logEntry.transactionProductAcquired || null,
+          elementName: logEntry.traceabilityElementName || null,
+          documentNumber: logEntry.transactionDocumentNumber || null,
+          maritalStatus: logEntry.transactionMaritalStatus || null,
+          firstName: logEntry.transactionFirstName || null,
+          gender: logEntry.transactionGender || null,
+          birthDate: logEntry.transactionBirthDate || null,
+          documentType: logEntry.transactionDocumentType || null,
+          maternalLastname: logEntry.transactionMaternalLastname || null,
+          subProductAcquired: logEntry.transactionSubproductAcquired || null,
+          paternalLastname: logEntry.transactionPaternalLastname || null,
+          pageInternalName: logEntry.traceabilityPageInternalName || null,
+          transactionId:
+            logEntry.transactionId ||
+            logEntry.traceabilityTransactionId ||
+            null,
+        };
+
+        results.push(consultData);
+      }
+    }
+
+    // If results found, return success response
+    if (results.length > 0) {
       return this.apiResponseBuilder.success(
-        transactionLog,
-        'Registro Existoso',
+        results,
+        'Transancción ejecutada con éxito',
+        201,
       );
     }
 
     // If not found, return error response with empty array
-    const errorData: ConsultDataLogResponse[] = [];
-
-    return this.apiResponseBuilder.error(
-      'Registro no Existoso',
-      404,
-      errorData,
-    );
+    return this.apiResponseBuilder.error('Registro no Existoso', 404, []);
   }
 }

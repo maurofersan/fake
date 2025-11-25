@@ -50,8 +50,8 @@ export class OTPService {
     // In real implementation, return success message without the code
 
     return this.apiResponseBuilder.success(
-      otpCode, // In production, return a success message instead
-      'OTP generado correctamente',
+      'OK', // In production, return a success message instead
+      'OTP Generado correctamente',
     );
   }
 
