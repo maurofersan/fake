@@ -298,60 +298,45 @@ export class LogsService {
   }
 
   /**
-   * Consults a log by document type, document number, and page name
-   * Returns ApiResponse<TransactionLogRecord> if found, or ApiResponse<ConsultDataLogResponse> if not found
+   * Consults a log by transactionId and page name
+   * Returns ApiResponse<TransactionLogRecord> if found, or ApiResponse<ConsultDataLogResponse[]> if not found
    */
   consultLog(
     query: ConsultLogQueryDto,
-  ): ApiResponse<TransactionLogRecord | ConsultDataLogResponse> {
-    // Search for logs matching the criteria
-    // We'll search through stored logs by document type, document number, and page name
-    const allKeys = this.fakeStorage.getAllKeys();
-    console.log('allKeys::', allKeys);
-    const logKeys = allKeys.filter((key) => key.startsWith('log:transaction:'));
+  ): ApiResponse<TransactionLogRecord | ConsultDataLogResponse[]> {
+    // Search for log by transactionId
+    const transactionKey = `log:transaction:${query.transactionId}`;
+    const logEntry = this.fakeStorage.getItem(
+      transactionKey,
+    ) as DataGeneralLogResponse | null;
 
-    // Find matching log entry
-    for (const key of logKeys) {
-      const logEntry = this.fakeStorage.getItem(
-        key,
-      ) as DataGeneralLogResponse | null;
-      console.log('logEntry::', logEntry);
-      if (
-        logEntry &&
-        logEntry.transactionDocumentType === query.typeDocument &&
-        logEntry.transactionDocumentNumber === query.numberDocument &&
-        logEntry.traceabilityPageInternalName === query.namePage
-      ) {
-        // Convert DataGeneralLogResponse to TransactionLogRecord
-        const transactionLog: TransactionLogRecord = {
-          transactionLogId: logEntry.transactionId || randomUUID(),
-          transactionLogSessionId: logEntry.transactionSessionId || '',
-          transactionLogProductId: logEntry.transactionProductAcquired,
-          transactionLogSubProductId: logEntry.transactionSubproductAcquired,
-          transactionLogDocumentType: logEntry.transactionDocumentType,
-          transactionLogDocumentNumber: logEntry.transactionDocumentNumber,
-          transactionLogPageId: logEntry.traceabilityPageInternalName,
-          transactionLogDate: logEntry.transactionStartDate,
-          transactionLogComments: logEntry.transactionIncompleteReason,
-          createdAt: logEntry.createdAt,
-          createdBy: logEntry.createdBy,
-          updatedAt: logEntry.updatedAt,
-          updatedBy: logEntry.updatedBy,
-        };
+    // Check if log exists and matches the page name
+    if (logEntry && logEntry.traceabilityPageInternalName === query.namePage) {
+      // Convert DataGeneralLogResponse to TransactionLogRecord
+      const transactionLog: TransactionLogRecord = {
+        transactionLogId: logEntry.transactionId || randomUUID(),
+        transactionLogSessionId: logEntry.transactionSessionId || '',
+        transactionLogProductId: logEntry.transactionProductAcquired,
+        transactionLogSubProductId: logEntry.transactionSubproductAcquired,
+        transactionLogDocumentType: logEntry.transactionDocumentType,
+        transactionLogDocumentNumber: logEntry.transactionDocumentNumber,
+        transactionLogPageId: logEntry.traceabilityPageInternalName,
+        transactionLogDate: logEntry.transactionStartDate,
+        transactionLogComments: logEntry.transactionIncompleteReason,
+        createdAt: logEntry.createdAt,
+        createdBy: logEntry.createdBy,
+        updatedAt: logEntry.updatedAt,
+        updatedBy: logEntry.updatedBy,
+      };
 
-        return this.apiResponseBuilder.success(
-          transactionLog,
-          'Registro Existoso',
-        );
-      }
+      return this.apiResponseBuilder.success(
+        transactionLog,
+        'Registro Existoso',
+      );
     }
 
-    // If not found, return error response
-    const errorData: ConsultDataLogResponse = {
-      documentType: query.typeDocument,
-      documentNumber: query.numberDocument,
-      pageInternalName: query.namePage,
-    };
+    // If not found, return error response with empty array
+    const errorData: ConsultDataLogResponse[] = [];
 
     return this.apiResponseBuilder.error(
       'Registro no Existoso',

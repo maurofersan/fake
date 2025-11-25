@@ -33,7 +33,7 @@ export class LogsController {
   @HttpCode(HttpStatus.OK)
   consultLog(
     @Query() query: ConsultLogQueryDto,
-  ): ApiResponse<TransactionLogRecord | ConsultDataLogResponse> {
+  ): ApiResponse<TransactionLogRecord | ConsultDataLogResponse[]> {
     return this.logsService.consultLog(query);
   }
 }

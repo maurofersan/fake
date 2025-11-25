@@ -115,8 +115,7 @@ export class DataGeneralLogResponse {
  * Based on /logs/consultLog GET endpoint parameters
  */
 export class ConsultLogQueryDto {
-  typeDocument: string; // UUID format
-  numberDocument: string;
+  transactionId: string; // UUID format
   namePage: string;
 }
 
@@ -127,18 +126,18 @@ export class ConsultLogQueryDto {
 export class ConsultDataLogResponse {
   fullName?: string;
   currency?: string; // UUID format
-  productAcquired?: string; // UUID format
-  evaluatedValue?: string;
-  transactionId?: string; // UUID format
-  maritalStatus?: string; // UUID format
   elementName?: string;
   documentType?: string; // UUID format
-  gender?: string; // UUID format
   documentNumber?: string;
-  birthDate?: string;
   firstName?: string;
-  paternalLastname?: string;
+  gender?: string; // UUID format
+  maritalStatus?: string; // UUID format
+  birthDate?: string;
+  transactionId?: string; // UUID format
+  productAcquired?: string; // UUID format
+  evaluatedValue?: string;
   maternalLastname?: string;
-  pageInternalName?: string;
   subProductAcquired?: string; // UUID format
+  paternalLastname?: string;
+  pageInternalName?: string;
 }
