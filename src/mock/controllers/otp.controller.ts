@@ -1,6 +1,10 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { OTPService } from '../services/otp.service';
-import { GenerateOTPRecord, VerifyOTPRecord } from '../dto/otp.dto';
+import {
+  GenerateOTPRecord,
+  VerifyOTPRecord,
+  GenerateOTPResponse,
+} from '../dto/otp.dto';
 import { ApiResponse } from '../dto/common.dto';
 
 @Controller('otp')
@@ -9,7 +13,9 @@ export class OTPController {
 
   @Post('generate')
   @HttpCode(HttpStatus.OK)
-  generate(@Body() body: GenerateOTPRecord): ApiResponse<string> {
+  generate(
+    @Body() body: GenerateOTPRecord,
+  ): ApiResponse<GenerateOTPResponse> {
     return this.otpService.generate(body);
   }
 

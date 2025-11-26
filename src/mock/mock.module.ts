@@ -11,6 +11,7 @@ import { AccountOpeningService } from './services/account-opening.service';
 import { AmlService } from './services/aml.service';
 import { SettingsService } from './services/settings.service';
 import { OTPService } from './services/otp.service';
+import { OTPAttemptsService } from './services/otp-attempts.service';
 import { CaptchaService } from './services/captcha.service';
 import { LogsService } from './services/logs.service';
 import { MockDataGeneratorService } from './utils/mock-data-generator.service';
@@ -36,6 +37,7 @@ import { ApiResponseBuilderService } from './utils/api-response-builder.service'
     AmlService,
     SettingsService,
     OTPService,
+    OTPAttemptsService,
     CaptchaService,
     LogsService,
     MockDataGeneratorService,

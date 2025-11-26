@@ -30,3 +30,11 @@ export class OTPResponse {
   message: string;
   code?: string;
 }
+
+/**
+ * Response DTO for OTP generation
+ */
+export class GenerateOTPResponse {
+  expirationMinutes: number;
+  code?: string;
+}
