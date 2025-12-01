@@ -10,6 +10,7 @@ import {
   TypeAccountRecordDto,
 } from '../dto/settings.dto';
 import { ApiResponse } from '../dto/common.dto';
+import { PERU_DEPARTMENTS } from '../constants/peru-locations.constants';
 
 @Injectable()
 export class SettingsService {
@@ -33,11 +34,11 @@ export class SettingsService {
     if (stored) {
       departments = stored;
     } else {
-      // Generate array of departments (typically 5-10 items for mock)
-      departments = this.mockDataGenerator.generateArray(
-        'DepartmentResponse',
-        8,
-      );
+      // Use real Peru departments data
+      departments = PERU_DEPARTMENTS.map((dept) => ({
+        id: dept.id,
+        name: dept.name,
+      }));
 
       // Persist for future requests
       this.fakeStorage.setItem(storageKey, departments);
@@ -61,8 +62,21 @@ export class SettingsService {
     if (stored) {
       provinces = stored;
     } else {
-      // Generate array of provinces for a department
-      provinces = this.mockDataGenerator.generateArray('ProvinceResponse', 5);
+      // Find the department in Peru data
+      const department = PERU_DEPARTMENTS.find(
+        (dept) => dept.id === departmentId,
+      );
+
+      if (department) {
+        // Use real provinces for the department
+        provinces = department.provinces.map((prov) => ({
+          id: prov.id,
+          name: prov.name,
+        }));
+      } else {
+        // Fallback: return empty array if department not found
+        provinces = [];
+      }
 
       // Persist for future requests
       this.fakeStorage.setItem(storageKey, provinces);
@@ -86,8 +100,23 @@ export class SettingsService {
     if (stored) {
       districts = stored;
     } else {
-      // Generate array of districts for a province
-      districts = this.mockDataGenerator.generateArray('DistrictResponse', 8);
+      // Find the province in Peru data
+      let province = null;
+      for (const department of PERU_DEPARTMENTS) {
+        province = department.provinces.find((prov) => prov.id === provinceId);
+        if (province) break;
+      }
+
+      if (province) {
+        // Use real districts for the province
+        districts = province.districts.map((dist) => ({
+          id: dist.id,
+          name: dist.name,
+        }));
+      } else {
+        // Fallback: return empty array if province not found
+        districts = [];
+      }
 
       // Persist for future requests
       this.fakeStorage.setItem(storageKey, districts);

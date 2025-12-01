@@ -13,9 +13,7 @@ export class OTPController {
 
   @Post('generate')
   @HttpCode(HttpStatus.OK)
-  generate(
-    @Body() body: GenerateOTPRecord,
-  ): ApiResponse<GenerateOTPResponse> {
+  generate(@Body() body: GenerateOTPRecord): ApiResponse<GenerateOTPResponse> {
     return this.otpService.generate(body);
   }
 

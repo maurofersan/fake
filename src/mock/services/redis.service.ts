@@ -19,12 +19,12 @@ export class RedisService {
    */
   create(data: RedAccountRedisInputDTO): ApiResponse<RedAccountDto> {
     // Validate required fields for initial creation
-    if (!data.documentType || !data.documentNumber) {
-      return this.apiResponseBuilder.error(
-        'documentType y documentNumber son requeridos',
-        400,
-      );
-    }
+    // if (!data.documentType || !data.documentNumber) {
+    //   return this.apiResponseBuilder.error(
+    //     'documentType y documentNumber son requeridos',
+    //     400,
+    //   );
+    // }
 
     const documentKey = `red-account:doc:${data.documentType}:${data.documentNumber}`;
 
