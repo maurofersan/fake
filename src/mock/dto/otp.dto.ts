@@ -4,10 +4,16 @@
  */
 
 /**
+ * Type for OTP operations
+ */
+export type OTPType = 'ACCOUNT_OPENING' | 'LOAN';
+
+/**
  * DTO for generating OTP
  */
 export class GenerateOTPRecord {
-  device?: string;
+  device: string;
+  type: OTPType;
   phone?: string;
   email?: string;
 }
@@ -16,10 +22,11 @@ export class GenerateOTPRecord {
  * DTO for verifying OTP
  */
 export class VerifyOTPRecord {
-  device?: string;
+  device: string;
+  type: OTPType;
   phone?: string;
   email?: string;
-  code?: string;
+  code: string;
 }
 
 /**
@@ -35,6 +42,6 @@ export class OTPResponse {
  * Response DTO for OTP generation
  */
 export class GenerateOTPResponse {
-  expirationMinutes: number;
+  expirationSeconds: number;
   code?: string;
 }

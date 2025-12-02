@@ -14,7 +14,7 @@ export class OTPService {
   // Store OTPs temporarily (in production, use Redis with TTL)
   private otpStorage: Map<string, { code: string; expiresAt: number }> =
     new Map();
-  private readonly OTP_EXPIRY_MINUTES = 3;
+  private readonly OTP_EXPIRY_SECONDS = 90;
 
   constructor(
     private readonly fakeStorage: FakeStorageService,
@@ -47,7 +47,7 @@ export class OTPService {
       : `otp:email:${data.email}`;
 
     // Calculate expiration time
-    const expiresAt = Date.now() + this.OTP_EXPIRY_MINUTES * 60 * 1000;
+    const expiresAt = Date.now() + this.OTP_EXPIRY_SECONDS * 1000;
 
     // Store OTP with expiration
     this.otpStorage.set(storageKey, {
@@ -59,9 +59,9 @@ export class OTPService {
     // For mock purposes, we return it in the response
     // In real implementation, return success message without the code
 
-    // Return response with expiration minutes
+    // Return response with expiration seconds
     const response: GenerateOTPResponse = {
-      expirationMinutes: this.OTP_EXPIRY_MINUTES,
+      expirationSeconds: this.OTP_EXPIRY_SECONDS,
       code: otpCode,
     };
 
