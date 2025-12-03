@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { FakeStorageService } from '../utils/fake-storage.service';
 import { ApiResponseBuilderService } from '../utils/api-response-builder.service';
@@ -7,6 +7,13 @@ import { ApiResponse } from '../dto/common.dto';
 
 @Injectable()
 export class RedisService {
+  // Flag para simular errores del servidor (500, 502, 503, 504)
+  // Cambiar a true para habilitar la simulación de errores
+  private readonly SIMULATE_SERVER_ERRORS = false;
+
+  // Tipo de error a simular: '500' | '502' | '503' | '504' | null
+  private readonly ERROR_TYPE: '500' | '502' | '503' | '504' | null = '500';
+
   constructor(
     private readonly fakeStorage: FakeStorageService,
     private readonly apiResponseBuilder: ApiResponseBuilderService,
@@ -18,6 +25,27 @@ export class RedisService {
    * Generates idTransaction if it doesn't exist
    */
   create(data: RedAccountRedisInputDTO): ApiResponse<RedAccountDto> {
+    // Simular errores del servidor si está habilitado
+    if (this.SIMULATE_SERVER_ERRORS && this.ERROR_TYPE) {
+      const errorMessages = {
+        '500': 'Error interno del servidor',
+        '502': 'Bad Gateway - El servidor recibió una respuesta inválida',
+        '503':
+          'Servicio no disponible - El servidor no puede procesar la solicitud',
+        '504': 'Gateway Timeout - El servidor no respondió a tiempo',
+      };
+
+      const statusCode = parseInt(this.ERROR_TYPE) as HttpStatus;
+      const errorResponse = this.apiResponseBuilder.error(
+        errorMessages[this.ERROR_TYPE],
+        statusCode,
+      );
+
+      // Lanzar HttpException para que Angular lo capture en catchError
+      // El body de la excepción será el formato ApiResponse estándar
+      throw new HttpException(errorResponse, statusCode);
+    }
+
     // Validate required fields for initial creation
     // if (!data.documentType || !data.documentNumber) {
     //   return this.apiResponseBuilder.error(
